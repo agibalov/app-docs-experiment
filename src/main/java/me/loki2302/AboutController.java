@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @stereotype controller
+ * @description Exposes an API "about" endpoint
+ */
 @RestController
 @RequestMapping("/api/about")
 public class AboutController {
@@ -15,4 +19,9 @@ public class AboutController {
         aboutApiDto.version = "1.0";
         return ResponseEntity.ok(aboutApiDto);
     }
+
+    /**
+     * @undocumented
+     */
+    public static class DUMMY {}
 }

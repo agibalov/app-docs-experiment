@@ -11,6 +11,10 @@ import java.util.stream.Collectors;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.fromMethodCall;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
+/**
+ * @stereotype controller
+ * @description Exposes a "notes" endpoint
+ */
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {

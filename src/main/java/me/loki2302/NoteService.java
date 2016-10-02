@@ -5,6 +5,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * @stereotype service
+ * @description A service for Notes
+ */
 @Service
 public class NoteService {
     @Autowired

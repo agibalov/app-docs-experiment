@@ -18,6 +18,7 @@ task wrapper(type: Wrapper) {
 }
 
 apply plugin: 'application'
+apply plugin: 'checkstyle'
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.github.jruby-gradle.base'
 
@@ -33,11 +34,13 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
     testCompile 'com.github.spullara.mustache.java:compiler:0.9.1'
     testCompile 'com.google.guava:guava:19.0'
-    testCompile 'com.thoughtworks.qdox:qdox:2.0-M4'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.0.RELEASE'
     compile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.4'
     gems 'rubygems:asciidoctor-diagram:1.5.0'
+    checkstyle group: 'com.puppycrawl.tools', name: 'checkstyle', version: '7.1.1'
+    checkstyle project(':doc-core')
+    compile project(':doc-core')
 }
 
 ext {
@@ -46,7 +49,9 @@ ext {
 
 test {
     systemProperty 'snippetsDir', snippetsDir
+    testLogging.showStandardStreams = true
     outputs.dir snippetsDir
+    dependsOn checkstyleMain
 }
 
 asciidoctor {
@@ -61,4 +66,17 @@ asciidoctor {
     requires = ['asciidoctor-diagram']
     gemPath = jrubyPrepare.outputDir
     dependsOn jrubyPrepare, test
+}
+
+checkstyle {
+    sourceSets = [project.sourceSets.main]
+}
+
+tasks.withType(Checkstyle) {
+    configFile = file('checkstyle.xml')
+
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
 }

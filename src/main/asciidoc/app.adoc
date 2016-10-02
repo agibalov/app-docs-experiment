@@ -4,4 +4,18 @@ include::{snippetsDir}/DocTest/documentText/hello.adoc[]
 
 include::{snippetsDir}/DocTest/documentList/list.adoc[]
 
+== Classes
+
+=== Controllers
+
+include::{snippetsDir}/DocTest/documentClasses/controllers.adoc[]
+
+=== Services
+
+include::{snippetsDir}/DocTest/documentClasses/services.adoc[]
+
+=== Repositories
+
+include::{snippetsDir}/DocTest/documentClasses/repositories.adoc[]
+
 Yes.

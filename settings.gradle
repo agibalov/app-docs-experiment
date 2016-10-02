@@ -1,2 +1,2 @@
 rootProject.name = 'app-docs-experiment'
-
+include 'doc-core'

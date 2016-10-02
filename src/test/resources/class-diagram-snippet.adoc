@@ -1,0 +1,10 @@
+{{#javaClasses}}
+class {{name}} {
+{{#fields}}
+  {{name}};
+{{/fields}}
+{{#methods}}
+  public void {{name}}();
+{{/methods}}
+}
+{{/javaClasses}}

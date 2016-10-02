@@ -18,9 +18,17 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {
+    /**
+     * All note-related transactions
+     */
     @Autowired
     private NoteService noteService;
 
+    /**
+     * Given all necessary note attributes, create a new note.
+     * @param noteDto
+     * @return
+     */
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity createNote(@RequestBody NoteDto noteDto) {
         long noteId = noteService.createNote(noteDto.text);
@@ -28,6 +36,11 @@ public class NoteController {
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     * Given a note ID, provide a note.
+     * @param noteId
+     * @return
+     */
     @RequestMapping(value = "{noteId}", method = RequestMethod.GET)
     public ResponseEntity getNote(@PathVariable long noteId) {
         Note note = noteService.getNote(noteId);
@@ -39,6 +52,10 @@ public class NoteController {
         return ResponseEntity.ok(noteWithIdDto);
     }
 
+    /**
+     * Provide all notes.
+     * @return
+     */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getNotes() {
         List<Note> notes = noteService.getNotes();
@@ -48,6 +65,12 @@ public class NoteController {
         return ResponseEntity.ok(noteWithIdDtos);
     }
 
+    /**
+     * Given a note ID and all necessary attributes, update the note if it exists.
+     * @param noteId
+     * @param noteDto
+     * @return
+     */
     @RequestMapping(value = "{noteId}", method = RequestMethod.PUT)
     public ResponseEntity updateNote(@PathVariable long noteId, @RequestBody NoteDto noteDto) {
         Note note = noteService.updateNote(noteId, noteDto.text);
@@ -58,6 +81,11 @@ public class NoteController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Given a note ID, delete a note.
+     * @param noteId
+     * @return
+     */
     @RequestMapping(value = "{noteId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteNote(@PathVariable long noteId) {
         noteService.deleteNote(noteId);

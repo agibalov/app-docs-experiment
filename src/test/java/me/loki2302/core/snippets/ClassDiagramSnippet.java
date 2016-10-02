@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JavaClassesSnippet implements Snippet {
+public class ClassDiagramSnippet implements Snippet {
     private final List<Map<String, Object>> javaClasses;
 
-    public JavaClassesSnippet(List<Map<String, Object>> javaClasses) {
+    public ClassDiagramSnippet(List<Map<String, Object>> javaClasses) {
         this.javaClasses = javaClasses;
     }
 
@@ -20,6 +20,6 @@ public class JavaClassesSnippet implements Snippet {
     public SnippetResponse render() throws IOException {
         Map<String, Object> model = new HashMap<>();
         model.put("javaClasses", javaClasses);
-        return new TemplateSnippetResponse(model, "java-classes-snippet.adoc");
+        return new TemplateSnippetResponse(model, "class-diagram-snippet.adoc");
     }
 }

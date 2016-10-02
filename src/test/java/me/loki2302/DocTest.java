@@ -1,14 +1,15 @@
 package me.loki2302;
 
-import me.loki2302.core.*;
+import me.loki2302.core.ClassModel;
+import me.loki2302.core.CodebaseModel;
+import me.loki2302.core.CodebaseModelBuilder;
+import me.loki2302.core.SnippetWriter;
+import me.loki2302.core.snippets.ClassDiagramSnippet;
 import me.loki2302.core.snippets.JavaClassesSnippet;
-import me.loki2302.core.snippets.ListSnippet;
-import me.loki2302.core.snippets.StaticTextSnippet;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,45 +20,55 @@ public class DocTest {
     public final SnippetWriter snippetWriter = new SnippetWriter(System.getProperty("snippetsDir"));
 
     @Test
-    public void documentText() {
-        snippetWriter.write("hello.adoc", new StaticTextSnippet("hello world"));
-    }
-
-    @Test
-    public void documentList() {
-        List<String> items = Arrays.asList("Item One", "Item Two", "Item Three");
-        snippetWriter.write("list.adoc", new ListSnippet(items));
-    }
-
-    @Test
     public void documentClasses() {
         CodebaseModel codebaseModel = CodebaseModelBuilder.buildCodebaseModel(new File("./src/main/java"));
 
-        List<Map<String, String>> controllerClassModels =
+        List<Map<String, Object>> controllerClassModels =
                 makeClassModelMaps(codebaseModel.findClassesByStereotype("controller"));
         snippetWriter.write("controllers.adoc", new JavaClassesSnippet(controllerClassModels));
 
-        List<Map<String, String>> serviceClassModels =
+        List<Map<String, Object>> serviceClassModels =
                 makeClassModelMaps(codebaseModel.findClassesByStereotype("service"));
         snippetWriter.write("services.adoc", new JavaClassesSnippet(serviceClassModels));
 
-        List<Map<String, String>> repositoryClassModels =
+        List<Map<String, Object>> repositoryClassModels =
                 makeClassModelMaps(codebaseModel.findClassesByStereotype("repository"));
         snippetWriter.write("repositories.adoc", new JavaClassesSnippet(repositoryClassModels));
+
+        List<Map<String, Object>> allClassModels =
+                makeClassModelMaps(codebaseModel.findAllClasses());
+        snippetWriter.write("classDiagram.puml", new ClassDiagramSnippet(allClassModels));
     }
 
-    private static List<Map<String, String>> makeClassModelMaps(List<ClassModel> classModels) {
+    private static List<Map<String, Object>> makeClassModelMaps(List<ClassModel> classModels) {
         return classModels.stream()
                 .map(DocTest::makeClassModelMap)
                 .collect(Collectors.toList());
     }
 
-    private static Map<String, String> makeClassModelMap(ClassModel classModel) {
-        Map<String, String> attributes = new HashMap<>();
+    private static Map<String, Object> makeClassModelMap(ClassModel classModel) {
+        List<Map<String, Object>> fields = classModel.fields.stream().map(f -> {
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("name", f.name);
+            attributes.put("type", f.type);
+            attributes.put("description", f.description);
+            return attributes;
+        }).collect(Collectors.toList());
+
+        List<Map<String, Object>> methods = classModel.methods.stream().map(m -> {
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("name", m.name);
+            attributes.put("description", m.description);
+            return attributes;
+        }).collect(Collectors.toList());
+
+        Map<String, Object> attributes = new HashMap<>();
         attributes.put("name", classModel.name);
         attributes.put("description", classModel.description);
         attributes.put("stereotype", classModel.stereotype);
         attributes.put("source", classModel.source.getName());
+        attributes.put("fields", fields);
+        attributes.put("methods", methods);
         return attributes;
     }
 }

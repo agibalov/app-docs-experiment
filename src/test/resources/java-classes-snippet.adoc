@@ -1,3 +1,18 @@
 {{#javaClasses}}
-* *_{{stereotype}}_* `{{name}}` (`{{source}}`) - {{description}}
+#### {{name}}
+
+Found at `{{source}}`
+
+{{description}}
+
+##### Fields
+{{#fields}}
+* field `{{name}}` (`{{type}}`) - {{description}}
+{{/fields}}
+
+##### Methods
+{{#methods}}
+* method `{{name}}` - {{description}}
+{{/methods}}
+
 {{/javaClasses}}

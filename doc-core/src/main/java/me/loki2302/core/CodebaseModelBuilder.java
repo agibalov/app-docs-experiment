@@ -3,6 +3,8 @@ package me.loki2302.core;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
+import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -37,7 +39,17 @@ public class CodebaseModelBuilder {
                 .map(modellingResult -> ((SuccessfulModellingResult) modellingResult).classModel)
                 .collect(Collectors.toList());
 
-        return new CodebaseModel(classModels);
+        Graph graph = TinkerGraph.open();
+
+        for(ClassModel classModel : classModels) {
+            graph.addVertex(
+                    "name", classModel.name,
+                    "description", classModel.description,
+                    "stereotype", classModel.stereotype,
+                    "source", classModel.source);
+        }
+
+        return new CodebaseModel(graph);
     }
 
     public static ModellingResult modelClass(JavaClass javaClass) {

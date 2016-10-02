@@ -24,19 +24,19 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
 
             Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
             for (JavaClass javaClass : javaClasses) {
-                ClassModel classModel = ClassModelBuilder.build(javaClass);
+                ModellingResult modellingResult = CodebaseModelBuilder.modelClass(javaClass);
 
-                if (classModel instanceof SkipClassModel) {
+                if (modellingResult instanceof SkipModellingResult) {
                     continue;
                 }
 
-                if (classModel instanceof ErrorClassModel) {
-                    ErrorClassModel errorClassModel = (ErrorClassModel) classModel;
+                if (modellingResult instanceof ErrorModellingResult) {
+                    ErrorModellingResult errorClassModel = (ErrorModellingResult) modellingResult;
                     log(0, errorClassModel.message);
                     continue;
                 }
 
-                if (classModel instanceof SuccessClassModel) {
+                if (modellingResult instanceof SuccessfulModellingResult) {
                     // OK
                     continue;
                 }

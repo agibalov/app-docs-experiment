@@ -1,3 +1,3 @@
 {{#javaClasses}}
-* `{{name}}` - {{description}}
+* *_{{stereotype}}_* `{{name}}` (`{{source}}`) - {{description}}
 {{/javaClasses}}

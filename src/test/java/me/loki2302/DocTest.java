@@ -34,15 +34,15 @@ public class DocTest {
         CodebaseModel codebaseModel = CodebaseModelBuilder.buildCodebaseModel(new File("./src/main/java"));
 
         List<Map<String, String>> controllerClassModels =
-                makeClassModelMaps(codebaseModel.findAllClassesByStereotype("controller"));
+                makeClassModelMaps(codebaseModel.findClassesByStereotype("controller"));
         snippetWriter.write("controllers.adoc", new JavaClassesSnippet(controllerClassModels));
 
         List<Map<String, String>> serviceClassModels =
-                makeClassModelMaps(codebaseModel.findAllClassesByStereotype("service"));
+                makeClassModelMaps(codebaseModel.findClassesByStereotype("service"));
         snippetWriter.write("services.adoc", new JavaClassesSnippet(serviceClassModels));
 
         List<Map<String, String>> repositoryClassModels =
-                makeClassModelMaps(codebaseModel.findAllClassesByStereotype("repository"));
+                makeClassModelMaps(codebaseModel.findClassesByStereotype("repository"));
         snippetWriter.write("repositories.adoc", new JavaClassesSnippet(repositoryClassModels));
     }
 
@@ -56,6 +56,8 @@ public class DocTest {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("name", classModel.name);
         attributes.put("description", classModel.description);
+        attributes.put("stereotype", classModel.stereotype);
+        attributes.put("source", classModel.source.getName());
         return attributes;
     }
 }

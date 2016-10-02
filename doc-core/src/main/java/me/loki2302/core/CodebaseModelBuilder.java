@@ -5,6 +5,7 @@ import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,7 +73,13 @@ public class CodebaseModelBuilder {
         DocletTag descriptionDocletTag = descriptionDocletTags.get(0);
         String description = descriptionDocletTag.getValue();
 
-        ClassModel classModel = new ClassModel(javaClass.getName(), stereotype, description);
+        File source;
+        try {
+            source = new File(javaClass.getSource().getURL().toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        ClassModel classModel = new ClassModel(javaClass.getName(), stereotype, description, source);
 
         return new SuccessfulModellingResult(classModel);
     }

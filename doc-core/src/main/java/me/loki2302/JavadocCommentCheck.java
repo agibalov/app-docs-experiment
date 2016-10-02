@@ -12,8 +12,28 @@ import java.util.Collection;
 import java.util.List;
 
 public class JavadocCommentCheck extends AbstractFileSetCheck {
+    private File sourceRoot;
+
+    public void setSourceRoot(File sourceRoot) {
+        if(sourceRoot.exists()) {
+            this.sourceRoot = sourceRoot;
+        }
+    }
+
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
+        CodebaseModel codebaseModel = null;
+        try {
+            codebaseModel = CodebaseModelBuilder.buildCodebaseModel(sourceRoot);
+        } catch (Throwable t) {
+            // intentionally blank: codebaseModel is entirely optional
+            // TODO: consider an option to build a CodebaseModellingResult model to simplify this checker
+            // also note that qdox can resolve checkstyle's 'file' into qdox file:
+            // File qdoxFile = new File(javaClass.getSource().getURL().toURI());
+            // File checkstyleFile = ...; // comes as a processFiltered() parameter
+            // bool same = checkstyleFile.equals(qdoxFile); // true
+        }
+
         try {
             JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
             try {

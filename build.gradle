@@ -31,6 +31,9 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
+    testCompile 'com.github.spullara.mustache.java:compiler:0.9.1'
+    testCompile 'com.google.guava:guava:19.0'
+    testCompile 'com.thoughtworks.qdox:qdox:2.0-M4'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.0.RELEASE'
     compile group: 'org.hsqldb', name: 'hsqldb', version: '2.3.4'

@@ -1,3 +1,7 @@
 = The Application
 
+include::{snippetsDir}/DocTest/documentText/hello.adoc[]
+
+include::{snippetsDir}/DocTest/documentList/list.adoc[]
+
 Yes.

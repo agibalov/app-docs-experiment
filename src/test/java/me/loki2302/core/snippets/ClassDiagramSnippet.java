@@ -20,6 +20,6 @@ public class ClassDiagramSnippet implements Snippet {
     public SnippetResponse render() throws IOException {
         Map<String, Object> model = new HashMap<>();
         model.put("javaClasses", javaClasses);
-        return new TemplateSnippetResponse(model, "class-diagram-snippet.adoc");
+        return new TemplateSnippetResponse(model, "class-diagram-snippet.puml");
     }
 }

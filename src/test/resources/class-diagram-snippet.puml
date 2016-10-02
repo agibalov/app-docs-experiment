@@ -1,3 +1,5 @@
+@startuml
+
 {{#javaClasses}}
 class {{name}} {
 {{#fields}}
@@ -8,3 +10,5 @@ class {{name}} {
 {{/methods}}
 }
 {{/javaClasses}}
+
+@enduml

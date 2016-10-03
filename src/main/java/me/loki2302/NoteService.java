@@ -16,15 +16,16 @@ public class NoteService {
     private NoteRepository noteRepository;
 
     @Autowired
-    private NoteController.ActivityTracker activityTracker;
+    private TwitterService twitterService;
 
     @TransactionComponent("Create a note and provide ID")
     public long createNote(String text) {
-        activityTracker.trackOperationStarted();
         Note note = new Note();
         note.text = text;
         note = noteRepository.save(note);
-        activityTracker.trackOperationFinished();
+
+        twitterService.notifyFollowers();
+
         return note.id;
     }
 

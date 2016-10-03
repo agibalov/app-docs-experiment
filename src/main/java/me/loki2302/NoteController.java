@@ -28,7 +28,10 @@ public class NoteController {
     private NoteService noteService;
 
     @Autowired
-    private ActivityTracker activityTracker;
+    private UserActivityEventService userActivityEventService;
+
+    @Autowired
+    private UserActivityEventFactory userActivityEventFactory;
 
     /**
      * Given all necessary note attributes, create a new note.
@@ -38,10 +41,12 @@ public class NoteController {
     @TransactionEntryPoint("Create a note")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity createNote(@RequestBody NoteDto noteDto) {
-        activityTracker.trackOperationStarted();
         long noteId = noteService.createNote(noteDto.text);
         URI location = fromMethodCall(on(NoteController.class).getNote(noteId)).build().toUri();
-        activityTracker.trackOperationFinished();
+
+        UserActivityEvent event = userActivityEventFactory.makeNoteCreatedEvent(noteId);
+        userActivityEventService.logUserActivityEvent(event);
+
         return ResponseEntity.created(location).build();
     }
 
@@ -58,6 +63,9 @@ public class NoteController {
             return ResponseEntity.notFound().build();
         }
 
+        UserActivityEvent event = userActivityEventFactory.makeNoteRetrievedEvent(noteId);
+        userActivityEventService.logUserActivityEvent(event);
+
         NoteWithIdDto noteWithIdDto = makeNoteWithIdDto(note);
         return ResponseEntity.ok(noteWithIdDto);
     }
@@ -73,6 +81,10 @@ public class NoteController {
         List<NoteWithIdDto> noteWithIdDtos = notes.stream()
                 .map(NoteController::makeNoteWithIdDto)
                 .collect(Collectors.toList());
+
+        UserActivityEvent event = userActivityEventFactory.makeAllNotesRetrievedEvent();
+        userActivityEventService.logUserActivityEvent(event);
+
         return ResponseEntity.ok(noteWithIdDtos);
     }
 
@@ -90,6 +102,9 @@ public class NoteController {
             return ResponseEntity.notFound().build();
         }
 
+        UserActivityEvent event = userActivityEventFactory.makeNoteUpdatedEvent(noteId);
+        userActivityEventService.logUserActivityEvent(event);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -102,6 +117,10 @@ public class NoteController {
     @RequestMapping(value = "{noteId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteNote(@PathVariable long noteId) {
         noteService.deleteNote(noteId);
+
+        UserActivityEvent event = userActivityEventFactory.makeNoteDeletedEvent(noteId);
+        userActivityEventService.logUserActivityEvent(event);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -110,34 +129,5 @@ public class NoteController {
         noteWithIdDto.id = note.id;
         noteWithIdDto.text = note.text;
         return noteWithIdDto;
-    }
-
-    /**
-     * @undocumented
-     */
-    @Component
-    public static class ActivityTracker {
-        @Autowired
-        private SuperLogger superLogger;
-
-        @TransactionComponent("Track operation start")
-        public void trackOperationStarted() {
-            superLogger.log();
-        }
-
-        @TransactionComponent("Track operation completion")
-        public void trackOperationFinished() {
-            superLogger.log();
-        }
-    }
-
-    /**
-     * @undocumented
-     */
-    @Component
-    public static class SuperLogger {
-        @TransactionComponent("Log event")
-        public void log() {
-        }
     }
 }

@@ -1,7 +1,7 @@
 @startuml
 
 {{#javaClasses}}
-class {{name}} {
+class {{fullName}} {
 {{#fields}}
   {{name}};
 {{/fields}}
@@ -9,6 +9,12 @@ class {{name}} {
   public void {{name}}();
 {{/methods}}
 }
+{{/javaClasses}}
+
+{{#javaClasses}}
+{{#fields}}
+{{../fullName}} --> {{type}}
+{{/fields}}
 {{/javaClasses}}
 
 @enduml

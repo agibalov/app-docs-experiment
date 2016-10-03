@@ -5,7 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @undocumented
+ * @stereotype service
+ * @description A service that handles user activity events
  */
 @Service
 public class UserActivityEventService {

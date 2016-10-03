@@ -63,6 +63,7 @@ public class DocTest {
         }).collect(Collectors.toList());
 
         Map<String, Object> attributes = new HashMap<>();
+        attributes.put("fullName", classModel.fullName);
         attributes.put("name", classModel.name);
         attributes.put("description", classModel.description);
         attributes.put("stereotype", classModel.stereotype);

@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(AopAutoConfiguration.class)
 public class TransactionTraceConfiguration {
     @Bean
     public TransactionRecorder transactionTraceAspect() {

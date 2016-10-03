@@ -2,9 +2,9 @@ package me.loki2302;
 
 import me.loki2302.core.SnippetWriter;
 import me.loki2302.core.snippets.SequenceDiagramSnippet;
-import me.loki2302.core.spring.TransactionScript;
+import me.loki2302.core.spring.EnableTransactionTracing;
 import me.loki2302.core.spring.TransactionRecorder;
-import me.loki2302.core.spring.TransactionTraceConfiguration;
+import me.loki2302.core.spring.TransactionScript;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
         App.class,
-        TransactionTraceConfiguration.class,
         TransactionTest.Config.class
 }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -146,6 +145,7 @@ public class TransactionTest {
     }
 
     @Configuration
+    @EnableTransactionTracing
     public static class Config {
         @Bean
         public RestTemplate restTemplate() {

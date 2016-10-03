@@ -9,12 +9,7 @@ import org.springframework.context.annotation.Import;
 @Import(AopAutoConfiguration.class)
 public class TransactionTraceConfiguration {
     @Bean
-    public TransactionTraceAspect transactionTraceAspect() {
-        return new TransactionTraceAspect();
-    }
-
-    @Bean
-    public TransactionScriptGenerator transactionScriptGenerator() {
-        return new TransactionScriptGenerator();
+    public TransactionRecorder transactionTraceAspect() {
+        return new TransactionRecorder();
     }
 }

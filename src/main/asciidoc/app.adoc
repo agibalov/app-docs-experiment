@@ -13,11 +13,36 @@ A very useful application to manage your all your notes.
 include::{snippetsDir}/DocTest/documentClasses/classDiagram.puml[]
 ----
 
-=== Sequence diagram
+=== Sequence diagrams
 
-[plantuml, sequence-diagram, png]
+==== Create note transaction
+[plantuml, create-note-sd, png]
 ----
-include::{snippetsDir}/TransactionTest/itShouldCreateANote/sequenceDiagram.puml[]
+include::{snippetsDir}/TransactionTest/documentCreateNote/sequenceDiagram.puml[]
+----
+
+==== Update note transaction
+[plantuml, update-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentUpdateNote/sequenceDiagram.puml[]
+----
+
+==== Delete note transaction
+[plantuml, delete-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentDeleteNote/sequenceDiagram.puml[]
+----
+
+==== Get one note transaction
+[plantuml, get-one-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentGetNote/sequenceDiagram.puml[]
+----
+
+==== Get all notes transaction
+[plantuml, get-all-notes-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentGetAllNotes/sequenceDiagram.puml[]
 ----
 
 == Classes

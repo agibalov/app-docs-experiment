@@ -1,9 +1,7 @@
 package me.loki2302;
 
-import me.loki2302.core.TransactionComponent;
-import org.springframework.beans.factory.annotation.Autowired;
+import me.loki2302.spring.TransactionComponent;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * @undocumented

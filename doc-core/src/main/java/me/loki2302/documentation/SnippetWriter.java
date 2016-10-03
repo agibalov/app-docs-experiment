@@ -1,12 +1,12 @@
-package me.loki2302.core;
+package me.loki2302.documentation;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import me.loki2302.core.responses.PlainTextSnippetResponse;
-import me.loki2302.core.responses.TemplateSnippetResponse;
+import me.loki2302.documentation.responses.PlainTextSnippetResponse;
+import me.loki2302.documentation.responses.TemplateSnippetResponse;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;

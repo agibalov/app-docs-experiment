@@ -1,4 +1,4 @@
-package me.loki2302.core;
+package me.loki2302.documentation;
 
 import java.io.IOException;
 

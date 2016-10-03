@@ -1,10 +1,8 @@
 package me.loki2302;
 
-import me.loki2302.core.TransactionComponent;
-import me.loki2302.core.TransactionEntryPoint;
+import me.loki2302.spring.TransactionEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;

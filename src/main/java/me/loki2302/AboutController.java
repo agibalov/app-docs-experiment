@@ -1,6 +1,6 @@
 package me.loki2302;
 
-import me.loki2302.core.TransactionEntryPoint;
+import me.loki2302.spring.TransactionEntryPoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

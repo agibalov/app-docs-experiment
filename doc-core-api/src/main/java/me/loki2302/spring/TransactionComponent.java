@@ -1,11 +1,8 @@
-package me.loki2302.core;
+package me.loki2302.spring;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * @undocumented
- */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TransactionComponent {
     String value();

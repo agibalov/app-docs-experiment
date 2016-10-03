@@ -1,6 +1,6 @@
 package me.loki2302;
 
-import me.loki2302.core.TransactionComponent;
+import me.loki2302.spring.TransactionComponent;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

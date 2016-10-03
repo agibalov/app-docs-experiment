@@ -1,10 +1,10 @@
 package me.loki2302;
 
-import me.loki2302.core.SnippetWriter;
-import me.loki2302.core.snippets.SequenceDiagramSnippet;
-import me.loki2302.core.spring.EnableTransactionTracing;
-import me.loki2302.core.spring.TransactionRecorder;
-import me.loki2302.core.spring.TransactionScript;
+import me.loki2302.documentation.SnippetWriter;
+import me.loki2302.documentation.snippets.SequenceDiagramSnippet;
+import me.loki2302.spring.EnableTransactionTracing;
+import me.loki2302.spring.TransactionRecorder;
+import me.loki2302.spring.TransactionScript;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

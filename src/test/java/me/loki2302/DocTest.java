@@ -3,9 +3,9 @@ package me.loki2302;
 import me.loki2302.core.ClassModel;
 import me.loki2302.core.CodebaseModel;
 import me.loki2302.core.CodebaseModelBuilder;
-import me.loki2302.core.SnippetWriter;
-import me.loki2302.core.snippets.ClassDiagramSnippet;
-import me.loki2302.core.snippets.JavaClassesSnippet;
+import me.loki2302.documentation.SnippetWriter;
+import me.loki2302.documentation.snippets.ClassDiagramSnippet;
+import me.loki2302.documentation.snippets.JavaClassesSnippet;
 import org.junit.Rule;
 import org.junit.Test;
 

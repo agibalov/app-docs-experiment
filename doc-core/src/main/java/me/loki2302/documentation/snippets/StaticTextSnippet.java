@@ -1,8 +1,8 @@
-package me.loki2302.core.snippets;
+package me.loki2302.documentation.snippets;
 
-import me.loki2302.core.responses.PlainTextSnippetResponse;
-import me.loki2302.core.Snippet;
-import me.loki2302.core.SnippetResponse;
+import me.loki2302.documentation.responses.PlainTextSnippetResponse;
+import me.loki2302.documentation.Snippet;
+import me.loki2302.documentation.SnippetResponse;
 
 import java.io.IOException;
 

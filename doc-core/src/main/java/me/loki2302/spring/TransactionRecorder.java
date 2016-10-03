@@ -1,7 +1,5 @@
-package me.loki2302.core.spring;
+package me.loki2302.spring;
 
-import me.loki2302.core.TransactionComponent;
-import me.loki2302.core.TransactionEntryPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -51,7 +49,7 @@ public class TransactionRecorder {
         return steps;
     }
 
-    @Around("execution(@me.loki2302.core.TransactionEntryPoint * *.*(..))")
+    @Around("execution(@TransactionEntryPoint * *.*(..))")
     public Object traceTransaction(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         if(isRecording) {
             MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
@@ -74,7 +72,7 @@ public class TransactionRecorder {
         return result;
     }
 
-    @Around("execution(@me.loki2302.core.TransactionComponent * *.*(..))")
+    @Around("execution(@TransactionComponent * *.*(..))")
     public Object traceTransactionComponent(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         if(isRecording) {
             MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();

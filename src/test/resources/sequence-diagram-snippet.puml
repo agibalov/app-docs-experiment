@@ -1,6 +1,6 @@
 @startuml
 
-title Transaction: "{{& title}}"
+title: Transaction: {{& title}}
 
 {{#links}}
 {{& .}}

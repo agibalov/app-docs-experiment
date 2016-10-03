@@ -1,7 +1,10 @@
 package me.loki2302;
 
+import me.loki2302.core.TransactionComponent;
+import me.loki2302.core.TransactionEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,15 +27,21 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
+    @Autowired
+    private ActivityTracker activityTracker;
+
     /**
      * Given all necessary note attributes, create a new note.
      * @param noteDto
      * @return
      */
+    @TransactionEntryPoint("Create a note")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity createNote(@RequestBody NoteDto noteDto) {
+        activityTracker.trackOperationStarted();
         long noteId = noteService.createNote(noteDto.text);
         URI location = fromMethodCall(on(NoteController.class).getNote(noteId)).build().toUri();
+        activityTracker.trackOperationFinished();
         return ResponseEntity.created(location).build();
     }
 
@@ -41,6 +50,7 @@ public class NoteController {
      * @param noteId
      * @return
      */
+    @TransactionEntryPoint("Get a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.GET)
     public ResponseEntity getNote(@PathVariable long noteId) {
         Note note = noteService.getNote(noteId);
@@ -56,6 +66,7 @@ public class NoteController {
      * Provide all notes.
      * @return
      */
+    @TransactionEntryPoint("Get all notes")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getNotes() {
         List<Note> notes = noteService.getNotes();
@@ -71,6 +82,7 @@ public class NoteController {
      * @param noteDto
      * @return
      */
+    @TransactionEntryPoint("Update a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.PUT)
     public ResponseEntity updateNote(@PathVariable long noteId, @RequestBody NoteDto noteDto) {
         Note note = noteService.updateNote(noteId, noteDto.text);
@@ -86,6 +98,7 @@ public class NoteController {
      * @param noteId
      * @return
      */
+    @TransactionEntryPoint("Delete a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteNote(@PathVariable long noteId) {
         noteService.deleteNote(noteId);
@@ -97,5 +110,34 @@ public class NoteController {
         noteWithIdDto.id = note.id;
         noteWithIdDto.text = note.text;
         return noteWithIdDto;
+    }
+
+    /**
+     * @undocumented
+     */
+    @Component
+    public static class ActivityTracker {
+        @Autowired
+        private SuperLogger superLogger;
+
+        @TransactionComponent("Track operation start")
+        public void trackOperationStarted() {
+            superLogger.log();
+        }
+
+        @TransactionComponent("Track operation completion")
+        public void trackOperationFinished() {
+            superLogger.log();
+        }
+    }
+
+    /**
+     * @undocumented
+     */
+    @Component
+    public static class SuperLogger {
+        @TransactionComponent("Log event")
+        public void log() {
+        }
     }
 }

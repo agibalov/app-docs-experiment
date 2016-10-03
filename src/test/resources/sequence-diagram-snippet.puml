@@ -1,0 +1,9 @@
+@startuml
+
+title Transaction: "{{& title}}"
+
+{{#links}}
+{{& .}}
+{{/links}}
+
+@enduml

@@ -1,5 +1,6 @@
 package me.loki2302;
 
+import me.loki2302.core.TransactionEntryPoint;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/about")
 public class AboutController {
+    @TransactionEntryPoint("Get API description and version")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getAbout() {
         AboutApiDto aboutApiDto = new AboutApiDto();

@@ -1,8 +1,7 @@
 package me.loki2302.documentation;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import me.loki2302.documentation.responses.PlainTextSnippetResponse;
@@ -12,9 +11,6 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,7 +59,7 @@ public class SnippetWriter implements TestRule {
         public void renderSnippet(String name, Snippet snippet) throws IOException {
             SnippetResponse snippetResponse = snippet.render();
 
-            String content = null;
+            String content;
             if(snippetResponse instanceof PlainTextSnippetResponse) {
                 PlainTextSnippetResponse plainTextSnippetResponse = (PlainTextSnippetResponse)snippetResponse;
                 content = plainTextSnippetResponse.content;
@@ -72,14 +68,10 @@ public class SnippetWriter implements TestRule {
                 String templateName = templateSnippetResponse.templateName;
                 Object model = templateSnippetResponse.model;
 
-                Writer writer = new StringWriter();
-                MustacheFactory mustacheFactory = new DefaultMustacheFactory();
-                String template = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);
-                Mustache mustache = mustacheFactory.compile(new StringReader(template), "name-for-" + templateName);
-                mustache.execute(writer, model);
-                writer.flush();
-
-                content = writer.toString();
+                Handlebars handlebars = new Handlebars();
+                String templateString = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);
+                Template template = handlebars.compileInline(templateString);
+                content = template.apply(model);
             } else {
                 throw new RuntimeException("Don't know how to handle " +
                         SnippetResponse.class.getSimpleName() +

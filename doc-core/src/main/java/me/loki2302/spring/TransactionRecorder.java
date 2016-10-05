@@ -1,9 +1,11 @@
 package me.loki2302.spring;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.AnnotationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +51,41 @@ public class TransactionRecorder {
         return steps;
     }
 
+    @Around("execution(public * org.springframework.data.repository.Repository+.*(..))")
+    public Object traceSpringRepositoryAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        Signature signature = proceedingJoinPoint.getSignature();
+        if(signature instanceof MethodSignature) {
+            MethodSignature methodSignature = (MethodSignature)signature;
+
+            TransactionEntryPoint transactionEntryPoint = AnnotationUtils.getAnnotation(
+                    methodSignature.getMethod(),
+                    TransactionEntryPoint.class);
+            if(transactionEntryPoint != null) {
+                return handleTransaction(proceedingJoinPoint);
+            }
+
+            TransactionComponent transactionComponent = AnnotationUtils.getAnnotation(
+                    methodSignature.getMethod(),
+                    TransactionComponent.class);
+            if(transactionComponent != null) {
+                return handleTransactionComponent(proceedingJoinPoint);
+            }
+        }
+
+        return proceedingJoinPoint.proceed();
+    }
+
     @Around("execution(@TransactionEntryPoint * *.*(..))")
-    public Object traceTransaction(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object traceTransactionEntryPointAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        return handleTransaction(proceedingJoinPoint);
+    }
+
+    @Around("execution(@TransactionComponent * *.*(..))")
+    public Object traceTransactionComponentAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        return handleTransactionComponent(proceedingJoinPoint);
+    }
+
+    private Object handleTransaction(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         if(isRecording) {
             MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
@@ -72,8 +107,7 @@ public class TransactionRecorder {
         return result;
     }
 
-    @Around("execution(@TransactionComponent * *.*(..))")
-    public Object traceTransactionComponent(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    private Object handleTransactionComponent(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         if(isRecording) {
             MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 

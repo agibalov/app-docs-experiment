@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserActivityEventRepository extends JpaRepository<UserActivityEvent, Long> {
     /**
-     * @undocumented
-     * @param entity
-     * @return
+     * Save an instance of UserActivityEvent
+     * @param entity an event to save
+     * @return a saved instance of original event
      */
     @TransactionComponent("Save user activity event")
     @Override

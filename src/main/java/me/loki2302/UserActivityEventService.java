@@ -15,8 +15,9 @@ public class UserActivityEventService {
     private UserActivityEventRepository userActivityEventRepository;
 
     /**
-     * @undocumented
-     * @param userActivityEvent
+     * Log user activity event
+     *
+     * @param userActivityEvent a user activity event to log
      */
     @TransactionComponent("Log user activity event")
     public void logUserActivityEvent(UserActivityEvent userActivityEvent) {

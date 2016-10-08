@@ -1,6 +1,8 @@
 = Notepad application
 :toc: left
 :toclevels: 5
+:sectnums:
+:sectnumlevels: 5
 
 A very useful application to manage your all your notes.
 

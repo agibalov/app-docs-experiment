@@ -7,6 +7,8 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spoon.Launcher;
+import spoon.SpoonAPI;
 
 import java.io.File;
 import java.util.List;
@@ -17,29 +19,39 @@ public class CodebaseModelBuilder {
 
     private final CodeReader codeReader;
     private final CodebaseModelGraphFacade codebaseModelGraphFacade;
+    private final String[] classpath;
 
     public CodebaseModelBuilder(
             CodeReader codeReader,
-            CodebaseModelGraphFacade codebaseModelGraphFacade) {
+            CodebaseModelGraphFacade codebaseModelGraphFacade,
+            String[] classpath) {
 
         this.codeReader = codeReader;
         this.codebaseModelGraphFacade = codebaseModelGraphFacade;
+        this.classpath = classpath;
     }
 
     public CodebaseModel buildCodebaseModel(File sourceRoot) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         javaProjectBuilder.addSourceTree(sourceRoot);
 
+        SpoonAPI spoonAPI = new Launcher();
+        spoonAPI.getEnvironment().setSourceClasspath(classpath);
+        spoonAPI.addInputResource(sourceRoot.getAbsolutePath());
+        spoonAPI.buildModel();
+
         List<ClassModel> classModels = javaProjectBuilder
                 .getClasses()
                 .stream()
-                .map(codeReader::readClass)
+                .map(clazz -> codeReader.readClass(clazz, spoonAPI))
                 .filter(classModel -> classModel.isDocumented)
                 .collect(Collectors.toList());
 
         Graph graph = TinkerGraph.open();
 
-        List<Vertex> classVertices = classModels.stream().map(classModel -> codebaseModelGraphFacade.classModelToVertex(graph, classModel)).collect(Collectors.toList());
+        List<Vertex> classVertices = classModels.stream()
+                .map(classModel -> codebaseModelGraphFacade.classModelToVertex(graph, classModel))
+                .collect(Collectors.toList());
         LOGGER.info("Loaded {} classes", classVertices.size());
 
         return new CodebaseModel(graph, codebaseModelGraphFacade);

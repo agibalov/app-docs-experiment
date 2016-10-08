@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'http://spoon.gforge.inria.fr/repositories/releases' }
     }
 
     dependencies {
@@ -27,6 +28,7 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven { url 'http://spoon.gforge.inria.fr/repositories/releases' }
 }
 
 dependencies {
@@ -48,6 +50,7 @@ ext {
 
 test {
     systemProperty 'snippetsDir', snippetsDir
+    systemProperty 'classpath', configurations.runtime.join(',')
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
     dependsOn checkstyleMain
@@ -69,12 +72,15 @@ asciidoctor {
 
 checkstyle {
     sourceSets = [project.sourceSets.main]
+    configProperties = [
+            'classpath': configurations.runtime.join(',')
+    ]
 }
 
 tasks.withType(Checkstyle) {
     configFile = file('checkstyle.xml')
 
-    //logging.setLevel(LogLevel.INFO)
+    logging.setLevel(LogLevel.INFO)
 
     reports {
         xml.enabled false

@@ -2,6 +2,7 @@ package me.loki2302;
 
 import me.loki2302.core.CodeReader;
 import me.loki2302.core.CodebaseModel;
+import me.loki2302.core.CodebaseModelBuilder;
 import me.loki2302.core.CodebaseModelGraphFacade;
 import me.loki2302.core.models.ClassModel;
 import me.loki2302.documentation.SnippetWriter;
@@ -24,9 +25,10 @@ public class DocTest {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         CodeReader codeReader = new CodeReader(validator);
         CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
-        me.loki2302.core.CodebaseModelBuilder codebaseModelBuilder = new me.loki2302.core.CodebaseModelBuilder(
+        CodebaseModelBuilder codebaseModelBuilder = new CodebaseModelBuilder(
                 codeReader,
-                codebaseModelGraphFacade);
+                codebaseModelGraphFacade,
+                System.getProperty("classpath").split(","));
         CodebaseModel codebaseModel = codebaseModelBuilder.buildCodebaseModel(new File("./src/main/java"));
 
         List<ClassModel> controllerClasses = codebaseModel.findClassesByStereotype("controller");

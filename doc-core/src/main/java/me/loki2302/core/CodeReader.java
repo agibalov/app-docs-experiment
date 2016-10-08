@@ -7,6 +7,12 @@ import me.loki2302.core.models.MethodModel;
 import me.loki2302.core.models.ParameterModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import spoon.SpoonAPI;
+import spoon.reflect.code.CtInvocation;
+import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.reference.CtExecutableReference;
+import spoon.reflect.reference.CtTypeReference;
+import spoon.reflect.visitor.Filter;
 
 import javax.validation.Validator;
 import java.io.File;
@@ -28,7 +34,7 @@ public class CodeReader {
         this.validator = validator;
     }
 
-    public ClassModel readClass(JavaClass javaClass) {
+    public ClassModel readClass(JavaClass javaClass, SpoonAPI spoonAPI) {
         LOGGER.info("Reading class {}", javaClass.getFullyQualifiedName());
 
         ClassModel classModel = new ClassModel();
@@ -46,7 +52,7 @@ public class CodeReader {
 
         classModel.methods = javaClass.getMethods()
                 .stream()
-                .map(javaMethod -> readMethod(classModel.isDocumented, javaMethod))
+                .map(javaMethod -> readMethod(classModel.isDocumented, javaMethod, spoonAPI))
                 .collect(Collectors.toList());
 
         classModel.fields = javaClass.getFields()
@@ -62,7 +68,7 @@ public class CodeReader {
         return classModel;
     }
 
-    private MethodModel readMethod(boolean isClassDocumented, JavaMethod javaMethod) {
+    private MethodModel readMethod(boolean isClassDocumented, JavaMethod javaMethod, SpoonAPI spoonAPI) {
         MethodModel methodModel = new MethodModel();
         methodModel.fullName = String.format("%s::%s()", javaMethod.getDeclaringClass().getFullyQualifiedName(), javaMethod.getName());
         methodModel.name = javaMethod.getName();
@@ -80,7 +86,41 @@ public class CodeReader {
                 .map(v -> v.getMessage())
                 .collect(Collectors.toList());
 
+        if(!javaMethod.isAbstract() && !javaMethod.getDeclaringClass().isInterface()) {
+            readMethodBody(javaMethod.getDeclaringClass().getFullyQualifiedName(), javaMethod.getName(), spoonAPI);
+        }
+
         return methodModel;
+    }
+
+    // TODO
+    private void readMethodBody(String fullyQualifiedClassName, String methodName, SpoonAPI spoonAPI) {
+        CtMethod<?> method = spoonAPI.getFactory()
+                .Class()
+                .get(fullyQualifiedClassName)
+                .getMethods()
+                .stream()
+                .filter(m -> m.getSimpleName().equals(methodName))
+                .findFirst()
+                .get();
+
+        method.getBody()
+                .getElements((Filter<CtInvocation<?>>) element -> true)
+                .stream()
+                .forEach(i -> {
+                    CtExecutableReference executableReference = i.getExecutable();
+                    CtTypeReference returnType = executableReference.getType();
+                    CtTypeReference declaringType = executableReference.getDeclaringType();
+
+                    if(returnType == null || declaringType == null) {
+                        LOGGER.info("Looks like classpath is not set property: {}", executableReference.getSignature());
+                    }
+
+                    LOGGER.info("[SPOON] returns={} class={}",
+                            returnType,
+                            declaringType
+                    );
+                });
     }
 
     private ParameterModel readParameter(boolean isMethodDocumented, JavaMethod javaMethod, JavaParameter javaParameter) {

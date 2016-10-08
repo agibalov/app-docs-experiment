@@ -1,11 +1,8 @@
 package me.loki2302.documentation;
 
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.Template;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import me.loki2302.documentation.responses.EjsSnippetResponse;
-import me.loki2302.documentation.responses.HandlebarsSnippetResponse;
 import me.loki2302.documentation.responses.PlainTextSnippetResponse;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -71,15 +68,6 @@ public class SnippetWriter implements TestRule {
             if(snippetResponse instanceof PlainTextSnippetResponse) {
                 PlainTextSnippetResponse plainTextSnippetResponse = (PlainTextSnippetResponse)snippetResponse;
                 content = plainTextSnippetResponse.content;
-            } else if(snippetResponse instanceof HandlebarsSnippetResponse) {
-                HandlebarsSnippetResponse handlebarsSnippetResponse = (HandlebarsSnippetResponse) snippetResponse;
-                String templateName = handlebarsSnippetResponse.templateName;
-                Object model = handlebarsSnippetResponse.model;
-
-                Handlebars handlebars = new Handlebars();
-                String templateString = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);
-                Template template = handlebars.compileInline(templateString);
-                content = template.apply(model);
             } else if(snippetResponse instanceof EjsSnippetResponse) {
                 EjsSnippetResponse ejsSnippetResponse = (EjsSnippetResponse)snippetResponse;
                 String templateName = ejsSnippetResponse.templateName;

@@ -1,0 +1,10 @@
+@startuml
+
+title: Transaction: <%= model.title %>
+
+<% for(var i = 0; i < model.links.size(); ++i) {
+    var link = model.links.get(i); %>
+<%- link %>
+<% } %>
+
+@enduml

@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.persistence;
 
 import me.loki2302.spring.TransactionComponent;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,6 +2,9 @@ package me.loki2302;
 
 import me.loki2302.documentation.SnippetWriter;
 import me.loki2302.documentation.snippets.SequenceDiagramSnippet;
+import me.loki2302.dtos.NoteDto;
+import me.loki2302.dtos.NoteWithIdDto;
+import me.loki2302.services.NoteService;
 import me.loki2302.spring.EnableTransactionTracing;
 import me.loki2302.spring.TransactionRecorder;
 import me.loki2302.spring.TransactionScript;

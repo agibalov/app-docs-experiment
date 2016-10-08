@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +8,7 @@ import javax.persistence.Id;
  * @undocumented
  */
 @Entity
-public class UserActivityEvent {
+public class Note {
     @Id
     @GeneratedValue
     public Long id;

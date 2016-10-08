@@ -4,11 +4,17 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import me.loki2302.documentation.responses.PlainTextSnippetResponse;
+import me.loki2302.documentation.responses.EjsSnippetResponse;
 import me.loki2302.documentation.responses.HandlebarsSnippetResponse;
+import me.loki2302.documentation.responses.PlainTextSnippetResponse;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,6 +56,8 @@ public class SnippetWriter implements TestRule {
     }
 
     private static class SnippetContext {
+        private final static Logger LOGGER = LoggerFactory.getLogger(SnippetContext.class);
+
         private final Path snippetsDirectoryPath;
 
         private SnippetContext(Path snippetsDirectoryPath) {
@@ -64,7 +72,7 @@ public class SnippetWriter implements TestRule {
                 PlainTextSnippetResponse plainTextSnippetResponse = (PlainTextSnippetResponse)snippetResponse;
                 content = plainTextSnippetResponse.content;
             } else if(snippetResponse instanceof HandlebarsSnippetResponse) {
-                HandlebarsSnippetResponse handlebarsSnippetResponse = (HandlebarsSnippetResponse)snippetResponse;
+                HandlebarsSnippetResponse handlebarsSnippetResponse = (HandlebarsSnippetResponse) snippetResponse;
                 String templateName = handlebarsSnippetResponse.templateName;
                 Object model = handlebarsSnippetResponse.model;
 
@@ -72,6 +80,37 @@ public class SnippetWriter implements TestRule {
                 String templateString = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);
                 Template template = handlebars.compileInline(templateString);
                 content = template.apply(model);
+            } else if(snippetResponse instanceof EjsSnippetResponse) {
+                EjsSnippetResponse ejsSnippetResponse = (EjsSnippetResponse)snippetResponse;
+                String templateName = ejsSnippetResponse.templateName;
+                Object model = ejsSnippetResponse.model;
+                LOGGER.info("templateName={}, model={}", templateName, model);
+
+                String templateString = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);
+                String ejsString = Resources.toString(
+                        Resources.getResource("META-INF/resources/webjars/ejs/2.4.1/ejs-v2.4.1/ejs.js"),
+                        Charsets.UTF_8);
+                Context context = Context.enter();
+                try {
+                    Scriptable scope = context.initStandardObjects();
+
+                    ScriptableObject.putProperty(scope, "template", templateString);
+
+                    Object modelObj = Context.javaToJS(model, scope);
+                    ScriptableObject.putProperty(scope, "model", modelObj);
+
+                    context.evaluateString(scope, "window = {}", "browser.js", 1, null);
+                    context.evaluateString(scope, ejsString, "ejs.js", 1, null);
+
+                    content = (String)context.evaluateString(
+                            scope,
+                            "window.ejs.render(template, { model: model })",
+                            "renderer.js",
+                            1,
+                            null);
+                } finally {
+                    context.exit();
+                }
             } else {
                 throw new RuntimeException("Don't know how to handle " +
                         SnippetResponse.class.getSimpleName() +

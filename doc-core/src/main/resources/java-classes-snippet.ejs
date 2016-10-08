@@ -1,0 +1,54 @@
+<% for(var classIndex = 0; classIndex < model.size(); ++classIndex) {
+    var clazz = model.get(classIndex);
+    if(!clazz.isDocumented) continue; %>
+
+#### <%= clazz.name %>
+
+Found at `<%= clazz.source %>`
+
+<%= clazz.description %>
+
+##### Fields
+
+    <% if(clazz.fields.size() === 0) { %>
+_<%= clazz.name %> does not have any fields._
+    <% } else { %>
+[options="header"]
+|===
+| Name | Type | Description
+
+        <% for(var fieldIndex = 0; fieldIndex < clazz.fields.size(); ++fieldIndex) {
+            var field = clazz.fields.get(fieldIndex);
+            if(!field.isDocumented) continue; %>
+
+| `<%= field.name %>` | `<%= field.typeName %>` | <%= field.description %>
+        <% } %>
+|===
+    <% } %>
+
+##### Methods
+
+    <% if(clazz.methods.size() === 0) { %>
+_<%= clazz.name %> does not have any methods._
+    <% } else { %>
+        <% for(var methodIndex = 0; methodIndex < clazz.methods.size(); ++methodIndex) {
+            var method = clazz.methods.get(methodIndex);
+            if(!method.isDocumented) continue; %>
+
+* Method `<%= method.name %>` - <%= method.description %>
+
+            <% if(method.parameters.size() === 0) { %>
+_<%= clazz.name %>::<%= method.name %> does not have any parameters._
+            <% } else { %>
+[options="header"]
+|===
+| Name | Type | Description
+                <% for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
+                    var parameter = method.parameters.get(parameterIndex); %>
+| `<%= parameter.name %>` | <%= parameter.typeName %> | <%= parameter.description %>
+                <% } %>
+|===
+            <% } %>
+        <% } %>
+    <% } %>
+<% } %>

@@ -17,6 +17,7 @@ dependencies {
     compile group: 'org.apache.tinkerpop', name: 'tinkergraph-gremlin', version: '3.2.2'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '1.4.0.RELEASE'
     compile group: 'com.github.jknack', name: 'handlebars', version: '4.0.6'
+    compile 'org.webjars.npm:ejs:2.4.1'
     compile 'com.google.guava:guava:19.0'
     compile 'org.hibernate:hibernate-validator:5.2.4.Final'
     compile 'org.glassfish.web:javax.el:2.2.4'

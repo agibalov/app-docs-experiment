@@ -10,6 +10,7 @@ import java.util.List;
 public class MethodModel {
     public String fullName;
     public String name;
+    public List<ParameterModel> parameters;
 
     public boolean isDocumented;
 

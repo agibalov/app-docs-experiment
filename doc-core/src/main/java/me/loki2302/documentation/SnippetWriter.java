@@ -5,7 +5,7 @@ import com.github.jknack.handlebars.Template;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import me.loki2302.documentation.responses.PlainTextSnippetResponse;
-import me.loki2302.documentation.responses.TemplateSnippetResponse;
+import me.loki2302.documentation.responses.HandlebarsSnippetResponse;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -63,10 +63,10 @@ public class SnippetWriter implements TestRule {
             if(snippetResponse instanceof PlainTextSnippetResponse) {
                 PlainTextSnippetResponse plainTextSnippetResponse = (PlainTextSnippetResponse)snippetResponse;
                 content = plainTextSnippetResponse.content;
-            } else if(snippetResponse instanceof TemplateSnippetResponse) {
-                TemplateSnippetResponse templateSnippetResponse = (TemplateSnippetResponse)snippetResponse;
-                String templateName = templateSnippetResponse.templateName;
-                Object model = templateSnippetResponse.model;
+            } else if(snippetResponse instanceof HandlebarsSnippetResponse) {
+                HandlebarsSnippetResponse handlebarsSnippetResponse = (HandlebarsSnippetResponse)snippetResponse;
+                String templateName = handlebarsSnippetResponse.templateName;
+                Object model = handlebarsSnippetResponse.model;
 
                 Handlebars handlebars = new Handlebars();
                 String templateString = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);

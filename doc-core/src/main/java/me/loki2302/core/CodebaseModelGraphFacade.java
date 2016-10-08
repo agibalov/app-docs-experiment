@@ -65,6 +65,7 @@ public class CodebaseModelGraphFacade {
         methodVertex.property("name", methodModel.name);
         methodVertex.property("description", methodModel.description);
         methodVertex.property("isDocumented", methodModel.isDocumented);
+        methodVertex.property("parameters", methodModel.parameters);
         methodVertex.property("errors", methodModel.errors);
         return methodVertex;
     }
@@ -75,6 +76,7 @@ public class CodebaseModelGraphFacade {
         methodModel.fullName = methodVertex.value("fullName");
         methodModel.description = methodVertex.value("description");
         methodModel.isDocumented = methodVertex.value("isDocumented");
+        methodModel.parameters = methodVertex.value("parameters");
         methodModel.errors = methodVertex.value("errors");
         return methodModel;
     }

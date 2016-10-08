@@ -51,34 +51,51 @@ public class DocTest {
 
     private static List<Map<String, Object>> makeClassModelMaps(List<ClassModel> classModels) {
         return classModels.stream()
+                .filter(classModel -> classModel.isDocumented)
                 .map(DocTest::makeClassModelMap)
                 .collect(Collectors.toList());
     }
 
     private static Map<String, Object> makeClassModelMap(ClassModel classModel) {
-        List<Map<String, Object>> fields = classModel.fields.stream().map(f -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("name", f.name);
-            attributes.put("type", f.typeName);
-            attributes.put("description", f.description);
-            return attributes;
-        }).collect(Collectors.toList());
+        List<Map<String, Object>> fields = classModel.fields.stream()
+                .filter(fieldModel -> fieldModel.isDocumented)
+                .map(fieldModel -> {
+                    Map<String, Object> fieldAttributes = new HashMap<>();
+                    fieldAttributes.put("name", fieldModel.name);
+                    fieldAttributes.put("type", fieldModel.typeName);
+                    fieldAttributes.put("description", fieldModel.description);
+                    return fieldAttributes;
+                }).collect(Collectors.toList());
 
-        List<Map<String, Object>> methods = classModel.methods.stream().map(m -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("name", m.name);
-            attributes.put("description", m.description);
-            return attributes;
-        }).collect(Collectors.toList());
+        List<Map<String, Object>> methods = classModel.methods.stream()
+                .filter(methodModel -> methodModel.isDocumented)
+                .map(methodModel -> {
+                    Map<String, Object> methodAttributes = new HashMap<>();
+                    methodAttributes.put("name", methodModel.name);
+                    methodAttributes.put("description", methodModel.description);
 
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("fullName", classModel.fullName);
-        attributes.put("name", classModel.name);
-        attributes.put("description", classModel.description);
-        attributes.put("stereotype", classModel.stereotype);
-        attributes.put("source", classModel.source.getName());
-        attributes.put("fields", fields);
-        attributes.put("methods", methods);
-        return attributes;
+                    List<Map<String, Object>> methodParameterAttributesList = methodModel.parameters.stream()
+                            .filter(parameterModel -> parameterModel.isDocumented)
+                            .map(parameterModel -> {
+                                Map<String, Object> parameterAttributes = new HashMap<>();
+                                parameterAttributes.put("name", parameterModel.name);
+                                parameterAttributes.put("typeName", parameterModel.typeName);
+                                parameterAttributes.put("description", parameterModel.description);
+                                return parameterAttributes;
+                            }).collect(Collectors.toList());
+                    methodAttributes.put("parameters", methodParameterAttributesList);
+
+                    return methodAttributes;
+                }).collect(Collectors.toList());
+
+        Map<String, Object> classAttributes = new HashMap<>();
+        classAttributes.put("fullName", classModel.fullName);
+        classAttributes.put("name", classModel.name);
+        classAttributes.put("description", classModel.description);
+        classAttributes.put("stereotype", classModel.stereotype);
+        classAttributes.put("source", classModel.source.getName());
+        classAttributes.put("fields", fields);
+        classAttributes.put("methods", methods);
+        return classAttributes;
     }
 }

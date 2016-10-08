@@ -5,14 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
+ * A service that handles user activity events
+ *
  * @stereotype service
- * @description A service that handles user activity events
  */
 @Service
 public class UserActivityEventService {
     @Autowired
     private UserActivityEventRepository userActivityEventRepository;
 
+    /**
+     * @undocumented
+     * @param userActivityEvent
+     */
     @TransactionComponent("Log user activity event")
     public void logUserActivityEvent(UserActivityEvent userActivityEvent) {
         userActivityEventRepository.save(userActivityEvent);

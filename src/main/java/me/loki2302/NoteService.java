@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * A service for Notes
+ *
  * @stereotype service
- * @description A service for Notes
  */
 @Service
 public class NoteService {
@@ -18,6 +19,11 @@ public class NoteService {
     @Autowired
     private TwitterService twitterService;
 
+    /**
+     * @undocumented
+     * @param text
+     * @return
+     */
     @TransactionComponent("Create a note and provide ID")
     public long createNote(String text) {
         Note note = new Note();
@@ -29,16 +35,31 @@ public class NoteService {
         return note.id;
     }
 
+    /**
+     * @undocumented
+     * @param noteId
+     * @return
+     */
     @TransactionComponent("Get a note by ID")
     public Note getNote(long noteId) {
         return noteRepository.findOne(noteId);
     }
 
+    /**
+     * @undocumented
+     * @return
+     */
     @TransactionComponent("Get all notes")
     public List<Note> getNotes() {
         return noteRepository.findAll();
     }
 
+    /**
+     * @undocumented
+     * @param noteId
+     * @param text
+     * @return
+     */
     @TransactionComponent("Update a note given ID and text")
     public Note updateNote(long noteId, String text) {
         Note note = noteRepository.findOne(noteId);
@@ -51,6 +72,10 @@ public class NoteService {
         return note;
     }
 
+    /**
+     * @undocumented
+     * @param noteId
+     */
     @TransactionComponent("Delete a note by id")
     public void deleteNote(long noteId) {
         noteRepository.delete(noteId);

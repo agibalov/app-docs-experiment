@@ -13,15 +13,13 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 /**
+ * Exposes a "notes" endpoint
+ *
  * @stereotype controller
- * @description Exposes a "notes" endpoint
  */
 @RestController
 @RequestMapping("/api/notes")
 public class NoteController {
-    /**
-     * All note-related transactions
-     */
     @Autowired
     private NoteService noteService;
 
@@ -33,8 +31,8 @@ public class NoteController {
 
     /**
      * Given all necessary note attributes, create a new note.
-     * @param noteDto
-     * @return
+     * @param noteDto an object containing note attributes
+     * @return a 201 response with Location header
      */
     @TransactionEntryPoint("Create a note")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -50,8 +48,8 @@ public class NoteController {
 
     /**
      * Given a note ID, provide a note.
-     * @param noteId
-     * @return
+     * @param noteId a note ID.
+     * @return a 200 response with note attributes.
      */
     @TransactionEntryPoint("Get a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.GET)
@@ -70,7 +68,7 @@ public class NoteController {
 
     /**
      * Provide all notes.
-     * @return
+     * @return a collection of all notes.
      */
     @TransactionEntryPoint("Get all notes")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -88,9 +86,9 @@ public class NoteController {
 
     /**
      * Given a note ID and all necessary attributes, update the note if it exists.
-     * @param noteId
-     * @param noteDto
-     * @return
+     * @param noteId a note ID.
+     * @param noteDto an object containing note attributes.
+     * @return a 204 response
      */
     @TransactionEntryPoint("Update a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.PUT)
@@ -108,8 +106,8 @@ public class NoteController {
 
     /**
      * Given a note ID, delete a note.
-     * @param noteId
-     * @return
+     * @param noteId a note ID
+     * @return a 204 response
      */
     @TransactionEntryPoint("Delete a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.DELETE)
@@ -122,6 +120,11 @@ public class NoteController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * @undocumented
+     * @param note
+     * @return
+     */
     private static NoteWithIdDto makeNoteWithIdDto(Note note) {
         NoteWithIdDto noteWithIdDto = new NoteWithIdDto();
         noteWithIdDto.id = note.id;

@@ -7,6 +7,10 @@ import me.loki2302.core.CodebaseModel;
 import me.loki2302.core.CodebaseModelBuilder;
 import me.loki2302.core.CodebaseModelGraphFacade;
 import me.loki2302.core.models.ClassModel;
+import me.loki2302.core.models.FieldModel;
+import me.loki2302.core.models.MethodModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -14,6 +18,8 @@ import java.io.File;
 import java.util.List;
 
 public class JavadocCommentCheck extends AbstractFileSetCheck {
+    private final static Logger LOGGER = LoggerFactory.getLogger(JavadocCommentCheck.class);
+
     private File sourceRoot;
     private CodebaseModel codebaseModel;
 
@@ -33,6 +39,10 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
                 codebaseModelGraphFacade);
 
         codebaseModel = codebaseModelBuilder.buildCodebaseModel(sourceRoot);
+
+        LOGGER.info("Loaded codebase model from {}. There are {} classes.",
+                sourceRoot,
+                codebaseModel.findAllClasses().size());
     }
 
     @Override
@@ -44,11 +54,17 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
                     log(0, String.format("class %s: %s", classModel.name, error));
                 }
 
-                /*for(MethodModel methodModel : classModel.methods) {
+                for(FieldModel fieldModel : classModel.fields) {
+                    for(String error : fieldModel.errors) {
+                        log(0, String.format("field %s::%s: %s", classModel.name, fieldModel.name, error));
+                    }
+                }
+
+                for(MethodModel methodModel : classModel.methods) {
                     for(String error : methodModel.errors) {
                         log(0, String.format("method %s::%s: %s", classModel.name, methodModel.name, error));
                     }
-                }*/
+                }
             }
         } catch(Throwable t) {
             log(0, String.format("error! %s", t.getMessage()));

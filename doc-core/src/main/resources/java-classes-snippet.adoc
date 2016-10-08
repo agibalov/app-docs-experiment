@@ -13,6 +13,9 @@ Found at `{{source}}`
 ##### Methods
 {{#methods}}
 * method `{{name}}` - {{description}}
+{{#parameters}}
+** {{name}} ({{typeName}}) - {{description}}
+{{/parameters}}
 {{/methods}}
 
 {{/javaClasses}}

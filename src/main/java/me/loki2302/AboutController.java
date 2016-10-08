@@ -7,12 +7,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * Exposes an API "about" endpoint
+ *
  * @stereotype controller
- * @description Exposes an API "about" endpoint
  */
 @RestController
 @RequestMapping("/api/about")
 public class AboutController {
+    /**
+     * Provides API description and version
+     *
+     * @return
+     */
     @TransactionEntryPoint("Get API description and version")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getAbout() {

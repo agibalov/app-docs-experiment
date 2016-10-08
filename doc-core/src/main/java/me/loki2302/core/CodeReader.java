@@ -93,7 +93,6 @@ public class CodeReader {
         return methodModel;
     }
 
-    // TODO
     private void readMethodBody(String fullyQualifiedClassName, String methodName, SpoonAPI spoonAPI) {
         CtMethod<?> method = spoonAPI.getFactory()
                 .Class()
@@ -109,6 +108,7 @@ public class CodeReader {
                 .stream()
                 .forEach(i -> {
                     CtExecutableReference executableReference = i.getExecutable();
+                    String executableMethodName = executableReference.getSimpleName();
                     CtTypeReference returnType = executableReference.getType();
                     CtTypeReference declaringType = executableReference.getDeclaringType();
 
@@ -116,10 +116,10 @@ public class CodeReader {
                         LOGGER.info("Looks like classpath is not set property: {}", executableReference.getSignature());
                     }
 
-                    LOGGER.info("[SPOON] returns={} class={}",
+                    LOGGER.info("[SPOON/METHOD] returns={} class={} method={}",
                             returnType,
-                            declaringType
-                    );
+                            declaringType,
+                            executableMethodName);
                 });
     }
 

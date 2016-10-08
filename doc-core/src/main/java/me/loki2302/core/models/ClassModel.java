@@ -15,10 +15,10 @@ public class ClassModel {
 
     public boolean isDocumented;
 
-    @NotEmpty(groups = Documented.class)
+    @NotEmpty(groups = Documented.class, message = "Missing a class description. Please add a Javadoc comment.")
     public String description;
 
-    @NotEmpty(groups = Documented.class)
+    @NotEmpty(groups = Documented.class, message = "Missing a class stereotype. Please add a @stereotype (controller, service, repository) Javadoc tag.")
     public String stereotype;
 
     public List<MethodModel> methods;

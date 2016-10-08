@@ -9,6 +9,7 @@ import me.loki2302.core.CodebaseModelGraphFacade;
 import me.loki2302.core.models.ClassModel;
 import me.loki2302.core.models.FieldModel;
 import me.loki2302.core.models.MethodModel;
+import me.loki2302.core.models.ParameterModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,18 +52,35 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
             List<ClassModel> classModels = codebaseModel.findClassesByFile(file);
             for(ClassModel classModel : classModels) {
                 for(String error : classModel.errors) {
-                    log(0, String.format("class %s: %s", classModel.name, error));
+                    log(0, String.format("Class %s: %s",
+                            classModel.name,
+                            error));
                 }
 
                 for(FieldModel fieldModel : classModel.fields) {
                     for(String error : fieldModel.errors) {
-                        log(0, String.format("field %s::%s: %s", classModel.name, fieldModel.name, error));
+                        log(0, String.format("Field %s::%s: %s",
+                                classModel.name,
+                                fieldModel.name,
+                                error));
                     }
                 }
 
                 for(MethodModel methodModel : classModel.methods) {
                     for(String error : methodModel.errors) {
-                        log(0, String.format("method %s::%s: %s", classModel.name, methodModel.name, error));
+                        log(0, String.format("Method %s::%s: %s",
+                                classModel.name,
+                                methodModel.name, error));
+                    }
+
+                    for(ParameterModel parameterModel : methodModel.parameters) {
+                        for(String error : parameterModel.errors) {
+                            log(0, String.format("Method parameter %s::%s (%s): %s",
+                                    classModel.name,
+                                    methodModel.name,
+                                    parameterModel.name,
+                                    error));
+                        }
                     }
                 }
             }

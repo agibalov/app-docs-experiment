@@ -12,34 +12,38 @@ import java.util.List;
  */
 public interface NoteRepository extends JpaRepository<Note, Long> {
     /**
-     * @undocumented
-     * @param entity
-     * @return
+     * Save or update a note
+     *
+     * @param entity note to be saved
+     * @return saved or updated not instance
      */
     @TransactionComponent("Save a note")
     @Override
     Note save(Note entity);
 
     /**
-     * @undocumented
-     * @param id
-     * @return
+     * Find a note by ID
+     *
+     * @param id a note ID
+     * @return a note with given ID or null
      */
     @TransactionComponent("Find a note")
     @Override
     Note findOne(Long id);
 
     /**
-     * @undocumented
-     * @return
+     * Find all notes
+     *
+     * @return a list of notes
      */
     @TransactionComponent("Find all notes")
     @Override
     List<Note> findAll();
 
     /**
-     * @undocumented
-     * @param id
+     * Delete a note by ID
+     *
+     * @param id a note ID
      */
     @TransactionComponent("Delete a note")
     @Override

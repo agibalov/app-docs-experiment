@@ -12,7 +12,7 @@ public class ParameterModel {
     public String typeName;
     public boolean isDocumented;
 
-    @NotEmpty(groups = Documented.class)
+    @NotEmpty(groups = Documented.class, message = "Missing a method parameter description. Please add a @param Javadoc tag.")
     public String description;
 
     public List<String> errors;

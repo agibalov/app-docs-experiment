@@ -74,7 +74,7 @@ checkstyle {
 tasks.withType(Checkstyle) {
     configFile = file('checkstyle.xml')
 
-    logging.setLevel(LogLevel.INFO)
+    //logging.setLevel(LogLevel.INFO)
 
     reports {
         xml.enabled false

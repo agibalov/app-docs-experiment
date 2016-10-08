@@ -17,7 +17,7 @@ public class AboutController {
     /**
      * Provides API description and version
      *
-     * @return
+     * @return Response entity with API details
      */
     @TransactionEntryPoint("Get API description and version")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -27,9 +27,4 @@ public class AboutController {
         aboutApiDto.version = "1.0";
         return ResponseEntity.ok(aboutApiDto);
     }
-
-    /**
-     * @undocumented
-     */
-    public static class DUMMY {}
 }

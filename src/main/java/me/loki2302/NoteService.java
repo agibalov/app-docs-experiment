@@ -20,9 +20,10 @@ public class NoteService {
     private TwitterService twitterService;
 
     /**
-     * @undocumented
-     * @param text
-     * @return
+     * Create a new note
+     *
+     * @param text a note text
+     * @return a newly created note ID
      */
     @TransactionComponent("Create a note and provide ID")
     public long createNote(String text) {
@@ -36,9 +37,10 @@ public class NoteService {
     }
 
     /**
-     * @undocumented
-     * @param noteId
-     * @return
+     * Get an existing note by ID
+     *
+     * @param noteId a note ID
+     * @return an existing note, or null if it does not exist
      */
     @TransactionComponent("Get a note by ID")
     public Note getNote(long noteId) {
@@ -46,8 +48,9 @@ public class NoteService {
     }
 
     /**
-     * @undocumented
-     * @return
+     * Get all notes
+     *
+     * @return a list of all existing notes
      */
     @TransactionComponent("Get all notes")
     public List<Note> getNotes() {
@@ -55,10 +58,11 @@ public class NoteService {
     }
 
     /**
-     * @undocumented
-     * @param noteId
-     * @param text
-     * @return
+     * Update an existing note
+     *
+     * @param noteId an ID of note to update
+     * @param text a new text to update the note with
+     * @return an updated note, or null if requested note doesn't exist
      */
     @TransactionComponent("Update a note given ID and text")
     public Note updateNote(long noteId, String text) {
@@ -73,8 +77,9 @@ public class NoteService {
     }
 
     /**
-     * @undocumented
-     * @param noteId
+     * Delete a note by ID
+     *
+     * @param noteId an ID of note to delete
      */
     @TransactionComponent("Delete a note by id")
     public void deleteNote(long noteId) {

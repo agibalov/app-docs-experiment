@@ -19,6 +19,8 @@ public class CodeReader {
 
     private final static String UNDOCUMENTED_TAG = "undocumented";
     private final static String STEREOTYPE_TAG = "stereotype";
+    private final static String PARAM_TAG = "param";
+    private final static String RETURN_TAG = "return";
 
     private final Validator validator;
 
@@ -39,7 +41,7 @@ public class CodeReader {
 
         classModel.errors = validator.validate(classModel)
                 .stream()
-                .map(v -> String.format("%s: %s", v.getPropertyPath(), v.getMessage()))
+                .map(v -> v.getMessage())
                 .collect(Collectors.toList());
 
         classModel.methods = javaClass.getMethods()
@@ -66,6 +68,8 @@ public class CodeReader {
         methodModel.name = javaMethod.getName();
         methodModel.isDocumented = isClassDocumented && !hasTag(javaMethod, UNDOCUMENTED_TAG);
         methodModel.description = getComment(javaMethod);
+        methodModel.returnTypeName = javaMethod.getReturnType().getFullyQualifiedName();
+        methodModel.returnDescription = getReturnTagValue(javaMethod);
 
         methodModel.parameters = javaMethod.getParameters()
                 .stream()
@@ -73,7 +77,7 @@ public class CodeReader {
                 .collect(Collectors.toList());
 
         methodModel.errors = validator.validate(methodModel).stream()
-                .map(v -> String.format("%s: %s", v.getPropertyPath(), v.getMessage()))
+                .map(v -> v.getMessage())
                 .collect(Collectors.toList());
 
         return methodModel;
@@ -87,7 +91,7 @@ public class CodeReader {
         parameterModel.description = readParameterDescription(javaMethod, javaParameter);
 
         parameterModel.errors = validator.validate(parameterModel).stream()
-                .map(v -> String.format("%s: %s", v.getPropertyPath(), v.getMessage()))
+                .map(v -> v.getMessage())
                 .collect(Collectors.toList());
 
         return parameterModel;
@@ -102,14 +106,14 @@ public class CodeReader {
         fieldModel.description = getComment(javaField);
 
         fieldModel.errors = validator.validate(fieldModel).stream()
-                .map(v -> String.format("%s: %s", v.getPropertyPath(), v.getMessage()))
+                .map(v -> v.getMessage())
                 .collect(Collectors.toList());
 
         return fieldModel;
     }
 
     private static String readParameterDescription(JavaMethod javaMethod, JavaParameter javaParameter) {
-        List<DocletTag> paramDocletTags = javaMethod.getTagsByName("param");
+        List<DocletTag> paramDocletTags = javaMethod.getTagsByName(PARAM_TAG);
         return paramDocletTags.stream()
                 .filter(t -> t.getParameters().size() > 0)
                 .filter(t -> t.getParameters().get(0).equals(javaParameter.getName()))
@@ -130,6 +134,20 @@ public class CodeReader {
 
         String value = docletTag.getValue();
 
+        return value;
+    }
+
+    private static String getReturnTagValue(JavaMethod javaMethod) {
+        if(javaMethod.getReturnType().getFullyQualifiedName().equals("void")) {
+            return "void";
+        }
+
+        DocletTag returnDocletTag = javaMethod.getTagByName(RETURN_TAG);
+        if(returnDocletTag == null) {
+            return "";
+        }
+
+        String value = returnDocletTag.getValue();
         return value;
     }
 

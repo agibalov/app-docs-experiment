@@ -4,8 +4,7 @@
 
 #### <%= clazz.name %>
 
-Found at `<%= clazz.source %>`
-
+[.lead]
 <%= clazz.description %>
 
 ##### Fields
@@ -35,7 +34,7 @@ _<%= clazz.name %> does not have any methods._
             var method = clazz.methods.get(methodIndex);
             if(!method.isDocumented) continue; %>
 
-* Method `<%= method.name %>` - <%= method.description %>
+* Method `<%= method.name %>` - <%= method.description %>. Returns: <%= method.returnDescription %>
 
             <% if(method.parameters.size() === 0) { %>
 _<%= clazz.name %>::<%= method.name %> does not have any parameters._

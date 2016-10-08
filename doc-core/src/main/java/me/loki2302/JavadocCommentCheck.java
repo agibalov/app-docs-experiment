@@ -15,6 +15,7 @@ import java.util.List;
 
 public class JavadocCommentCheck extends AbstractFileSetCheck {
     private File sourceRoot;
+    private CodebaseModel codebaseModel;
 
     public void setSourceRoot(File sourceRoot) {
         if(sourceRoot.exists()) {
@@ -23,18 +24,21 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
     }
 
     @Override
+    public void beginProcessing(String charset) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        CodeReader codeReader = new CodeReader(validator);
+        CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
+        CodebaseModelBuilder codebaseModelBuilder = new CodebaseModelBuilder(
+                codeReader,
+                codebaseModelGraphFacade);
+
+        codebaseModel = codebaseModelBuilder.buildCodebaseModel(sourceRoot);
+    }
+
+    @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
         try {
-            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-            CodeReader codeReader = new CodeReader(validator);
-            CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
-            CodebaseModelBuilder codebaseModelBuilder = new CodebaseModelBuilder(
-                    codeReader,
-                    codebaseModelGraphFacade);
-            CodebaseModel codebaseModel = codebaseModelBuilder.buildCodebaseModel(sourceRoot);
-
             List<ClassModel> classModels = codebaseModel.findClassesByFile(file);
-
             for(ClassModel classModel : classModels) {
                 for(String error : classModel.errors) {
                     log(0, String.format("class %s: %s", classModel.name, error));

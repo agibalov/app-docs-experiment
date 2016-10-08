@@ -2,13 +2,15 @@ package me.loki2302;
 
 import com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck;
 import com.puppycrawl.tools.checkstyle.api.CheckstyleException;
-import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.JavaClass;
-import me.loki2302.core.*;
+import me.loki2302.core.CodeReader;
+import me.loki2302.core.CodebaseModel;
+import me.loki2302.core.CodebaseModelBuilder;
+import me.loki2302.core.CodebaseModelGraphFacade;
+import me.loki2302.core.models.ClassModel;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 public class JavadocCommentCheck extends AbstractFileSetCheck {
@@ -22,50 +24,31 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
 
     @Override
     protected void processFiltered(File file, List<String> lines) throws CheckstyleException {
-        CodebaseModel codebaseModel = null;
         try {
-            codebaseModel = CodebaseModelBuilder.buildCodebaseModel(sourceRoot);
-        } catch (Throwable t) {
-            // intentionally blank: codebaseModel is entirely optional
-            // TODO: consider an option to build a CodebaseModellingResult model to simplify this checker
-            // also note that qdox can resolve checkstyle's 'file' into qdox file:
-            // File qdoxFile = new File(javaClass.getSource().getURL().toURI());
-            // File checkstyleFile = ...; // comes as a processFiltered() parameter
-            // bool same = checkstyleFile.equals(qdoxFile); // true
-        }
+            Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+            CodeReader codeReader = new CodeReader(validator);
+            CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
+            CodebaseModelBuilder codebaseModelBuilder = new CodebaseModelBuilder(
+                    codeReader,
+                    codebaseModelGraphFacade);
+            CodebaseModel codebaseModel = codebaseModelBuilder.buildCodebaseModel(sourceRoot);
 
-        try {
-            JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
-            try {
-                javaProjectBuilder.addSource(file);
-            } catch (IOException e) {
-                throw new CheckstyleException("Can't load " + file.getAbsolutePath(), e);
+            List<ClassModel> classModels = codebaseModel.findClassesByFile(file);
+
+            for(ClassModel classModel : classModels) {
+                for(String error : classModel.errors) {
+                    log(0, String.format("class %s: %s", classModel.name, error));
+                }
+
+                /*for(MethodModel methodModel : classModel.methods) {
+                    for(String error : methodModel.errors) {
+                        log(0, String.format("method %s::%s: %s", classModel.name, methodModel.name, error));
+                    }
+                }*/
             }
-
-            Collection<JavaClass> javaClasses = javaProjectBuilder.getClasses();
-            for (JavaClass javaClass : javaClasses) {
-                ModellingResult modellingResult = CodebaseModelBuilder.modelClass(javaClass);
-
-                if (modellingResult instanceof SkipModellingResult) {
-                    continue;
-                }
-
-                if (modellingResult instanceof ErrorModellingResult) {
-                    ErrorModellingResult errorClassModel = (ErrorModellingResult) modellingResult;
-                    log(0, errorClassModel.message);
-                    continue;
-                }
-
-                if (modellingResult instanceof SuccessfulModellingResult) {
-                    // OK
-                    continue;
-                }
-
-                throw new RuntimeException();
-            }
-        } catch (Throwable t) {
+        } catch(Throwable t) {
             log(0, String.format("error! %s", t.getMessage()));
-            throw new CheckstyleException("Unexpected error", t);
+            //throw new CheckstyleException("Unexpected error", t);
         }
     }
 }

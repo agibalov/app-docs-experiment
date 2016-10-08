@@ -1,14 +1,17 @@
 package me.loki2302;
 
-import me.loki2302.core.ClassModel;
+import me.loki2302.core.CodeReader;
 import me.loki2302.core.CodebaseModel;
-import me.loki2302.core.CodebaseModelBuilder;
+import me.loki2302.core.CodebaseModelGraphFacade;
+import me.loki2302.core.models.ClassModel;
 import me.loki2302.documentation.SnippetWriter;
 import me.loki2302.documentation.snippets.ClassDiagramSnippet;
 import me.loki2302.documentation.snippets.JavaClassesSnippet;
 import org.junit.Rule;
 import org.junit.Test;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +24,13 @@ public class DocTest {
 
     @Test
     public void documentClasses() {
-        CodebaseModel codebaseModel = CodebaseModelBuilder.buildCodebaseModel(new File("./src/main/java"));
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        CodeReader codeReader = new CodeReader(validator);
+        CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
+        me.loki2302.core.CodebaseModelBuilder codebaseModelBuilder = new me.loki2302.core.CodebaseModelBuilder(
+                codeReader,
+                codebaseModelGraphFacade);
+        CodebaseModel codebaseModel = codebaseModelBuilder.buildCodebaseModel(new File("./src/main/java"));
 
         List<Map<String, Object>> controllerClassModels =
                 makeClassModelMaps(codebaseModel.findClassesByStereotype("controller"));
@@ -50,7 +59,7 @@ public class DocTest {
         List<Map<String, Object>> fields = classModel.fields.stream().map(f -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("name", f.name);
-            attributes.put("type", f.type);
+            attributes.put("type", f.typeName);
             attributes.put("description", f.description);
             return attributes;
         }).collect(Collectors.toList());

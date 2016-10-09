@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TwitterService {
     /**
-     * Notify followers about a very important event.
+     * Notify Twitter followers about a very important event.
      */
     @TransactionComponent("Notify followers")
     public void notifyFollowers() {

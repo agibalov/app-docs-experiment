@@ -3,10 +3,6 @@
 <% for(var classIndex = 0; classIndex < model.size(); ++classIndex) {
     var clazz = model.get(classIndex); %>
 class <%= clazz.fullName %> {
-    <% for(var fieldIndex = 0; fieldIndex < clazz.fields.size(); ++fieldIndex) {
-        var field = clazz.fields.get(fieldIndex); %>
-    <%= field.name %>
-    <% } %>
     <% for(var methodIndex = 0; methodIndex < clazz.methods.size(); ++methodIndex) {
         var method = clazz.methods.get(methodIndex); %>
     public void <%= method.name %>()

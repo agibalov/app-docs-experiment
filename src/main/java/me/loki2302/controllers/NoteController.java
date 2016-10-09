@@ -20,7 +20,7 @@ import static org.springframework.web.servlet.mvc.method.annotation.MvcUriCompon
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 
 /**
- * Exposes a "notes" endpoint
+ * Implements a "notes" REST resource. Provides functionality to create, retrieve, update and delete notes.
  *
  * @stereotype controller
  */
@@ -38,6 +38,7 @@ public class NoteController {
 
     /**
      * Given all necessary note attributes, create a new note.
+     *
      * @param noteDto an object containing note attributes
      * @return a 201 response with Location header
      */
@@ -55,8 +56,9 @@ public class NoteController {
 
     /**
      * Given a note ID, provide a note.
-     * @param noteId a note ID.
-     * @return a 200 response with note attributes.
+     *
+     * @param noteId a note ID
+     * @return a 200 response with note attributes
      */
     @TransactionEntryPoint("Get a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.GET)
@@ -75,7 +77,8 @@ public class NoteController {
 
     /**
      * Provide all notes.
-     * @return a collection of all notes.
+     *
+     * @return a collection of all notes
      */
     @TransactionEntryPoint("Get all notes")
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -93,8 +96,9 @@ public class NoteController {
 
     /**
      * Given a note ID and all necessary attributes, update the note if it exists.
-     * @param noteId a note ID.
-     * @param noteDto an object containing note attributes.
+     *
+     * @param noteId a note ID
+     * @param noteDto an object containing note attributes
      * @return a 204 response
      */
     @TransactionEntryPoint("Update a note")
@@ -113,6 +117,7 @@ public class NoteController {
 
     /**
      * Given a note ID, delete a note.
+     *
      * @param noteId a note ID
      * @return a 204 response
      */

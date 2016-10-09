@@ -6,13 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 /**
- * A repository for Notes
+ * A repository for Notes.
  *
  * @stereotype repository
  */
 public interface NoteRepository extends JpaRepository<Note, Long> {
     /**
-     * Save or update a note
+     * Save or update a note.
      *
      * @param entity note to be saved
      * @return saved or updated not instance
@@ -22,7 +22,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     Note save(Note entity);
 
     /**
-     * Find a note by ID
+     * Find a note by ID.
      *
      * @param id a note ID
      * @return a note with given ID or null
@@ -32,7 +32,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     Note findOne(Long id);
 
     /**
-     * Find all notes
+     * Find all notes.
      *
      * @return a list of notes
      */
@@ -41,7 +41,7 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
     List<Note> findAll();
 
     /**
-     * Delete a note by ID
+     * Delete a note by ID.
      *
      * @param id a note ID
      */

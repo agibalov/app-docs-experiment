@@ -37,7 +37,7 @@ public class DocTest {
         List<ClassModel> serviceClasses = codebaseModel.findClassesByStereotype("service");
         snippetWriter.write("services.adoc", new JavaClassesSnippet(serviceClasses));
 
-        List<ClassModel> repositoryClasses = codebaseModel.findClassesByStereotype("controller");
+        List<ClassModel> repositoryClasses = codebaseModel.findClassesByStereotype("repository");
         snippetWriter.write("repositories.adoc", new JavaClassesSnippet(repositoryClasses));
 
         List<ClassModel> allClasses = codebaseModel.findAllClasses();

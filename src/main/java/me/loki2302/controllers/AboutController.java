@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Exposes an API "about" endpoint
+ * Implements an "about" REST resource. Provides functionality to retrieve API details.
  *
  * @stereotype controller
  */

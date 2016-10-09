@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * A service for Notes
+ * Implements business logic for Notes.
  *
  * @stereotype service
  */
@@ -22,7 +22,7 @@ public class NoteService {
     private TwitterService twitterService;
 
     /**
-     * Create a new note
+     * Given note text, create a new note and provide its ID.
      *
      * @param text a note text
      * @return a newly created note ID
@@ -60,7 +60,7 @@ public class NoteService {
     }
 
     /**
-     * Update an existing note
+     * Update an existing note.
      *
      * @param noteId an ID of note to update
      * @param text a new text to update the note with
@@ -79,7 +79,7 @@ public class NoteService {
     }
 
     /**
-     * Delete a note by ID
+     * Delete a note by ID.
      *
      * @param noteId an ID of note to delete
      */

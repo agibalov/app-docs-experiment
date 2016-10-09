@@ -31,30 +31,9 @@ function makeMethodSignature(method) {
     var clazz = model.get(classIndex);
     if(!clazz.isDocumented) continue; %>
 
-#### <%= clazz.name %>
+==== <%= clazz.name %>
 
-[.lead]
 <%= clazz.description %>
-
-##### Fields
-
-    <% if(clazz.fields.size() === 0) { %>
-_<%= clazz.name %> does not have any fields._
-    <% } else { %>
-[options="header"]
-|===
-| Name | Type | Description
-
-        <% for(var fieldIndex = 0; fieldIndex < clazz.fields.size(); ++fieldIndex) {
-            var field = clazz.fields.get(fieldIndex);
-            if(!field.isDocumented) continue; %>
-
-| `<%= field.name %>` | `<%= shortName(field.typeName) %>` | <%= field.description %>
-        <% } %>
-|===
-    <% } %>
-
-##### Methods
 
     <% if(clazz.methods.size() === 0) { %>
 _<%= clazz.name %> does not have any methods._
@@ -63,25 +42,28 @@ _<%= clazz.name %> does not have any methods._
             var method = clazz.methods.get(methodIndex);
             if(!method.isDocumented) continue; %>
 
-* Method `<%= method.name %>` - <%= method.description %>. Returns: <%= method.returnDescription %>
+===== <%= method.name %>
 
 [source,java]
 ----
 <%= makeMethodSignature(method) %>
 ----
 
-            <% if(method.parameters.size() === 0) { %>
-_<%= clazz.name %>::<%= method.name %> does not have any parameters._
-            <% } else { %>
+<%= method.description %>
+
+            <% if(method.parameters.size() > 0) { %>
 [options="header"]
 |===
 | Name | Type | Description
                 <% for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
                     var parameter = method.parameters.get(parameterIndex); %>
-| `<%= parameter.name %>` | <%= shortName(parameter.typeName) %> | <%= parameter.description %>
+| `<%= parameter.name %>` | `<%= shortName(parameter.typeName) %>` | <%= parameter.description %>
                 <% } %>
 |===
             <% } %>
+Returns: <%= method.returnDescription %>
+
+'''
         <% } %>
     <% } %>
 <% } %>

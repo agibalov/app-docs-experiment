@@ -1,65 +1,96 @@
-= Notepad application
 :toc: left
 :toclevels: 5
 :sectnums:
 :sectnumlevels: 5
 :source-highlighter: highlightjs
+:app: Notepad application
 
-A very useful application to manage your all your notes.
+= {app}
 
-== Diagrams
+This document explains what {app} is and what it is not. The sections below describe the intentions behind {app}, boring technical details and fancy diagrams.
 
-=== Class diagram
+== Introduction
+
+=== Goals
+
+Making notes is crucial. It's a well-known fact that 98.37611% of the people who don't make any notes forget about things and miss opportunities. {app} addresses this problem by providing unbelievably ultimate functionality:
+
+* Creating the notes
+* Retrieving the notes
+* Updating the notes
+* Deleting the notes
+
+The {app} team firmly believes that our application makes the world better.
+
+=== Technical overview
+
+{app} is a web application that exposes all its functionality via REST API. It uses Java and Spring as a foundation, and HSQLDB as a reliable production-grade data store.
+
+== Classes
+
+This sections describes how {app} is organized in terms of packages and classes. All classes are logically organized into packages:
+
+* Controllers - API endpoints implementation.
+* Services - business logic implementation.
+* Repositories - data access implementation.
 
 [plantuml, class-diagram, png]
 ----
 include::{snippetsDir}/DocTest/documentClasses/classDiagram.puml[]
 ----
 
-=== Sequence diagrams
-
-==== Create note transaction
-[plantuml, create-note-sd, png]
-----
-include::{snippetsDir}/TransactionTest/documentCreateNote/sequenceDiagram.puml[]
-----
-
-==== Update note transaction
-[plantuml, update-note-sd, png]
-----
-include::{snippetsDir}/TransactionTest/documentUpdateNote/sequenceDiagram.puml[]
-----
-
-==== Delete note transaction
-[plantuml, delete-note-sd, png]
-----
-include::{snippetsDir}/TransactionTest/documentDeleteNote/sequenceDiagram.puml[]
-----
-
-==== Get one note transaction
-[plantuml, get-one-note-sd, png]
-----
-include::{snippetsDir}/TransactionTest/documentGetNote/sequenceDiagram.puml[]
-----
-
-==== Get all notes transaction
-[plantuml, get-all-notes-sd, png]
-----
-include::{snippetsDir}/TransactionTest/documentGetAllNotes/sequenceDiagram.puml[]
-----
-
-== Classes
+See how controllers never depend directly on data access layer.
 
 === Controllers
+
+This section describes {app} API facade classes.
 
 include::{snippetsDir}/DocTest/documentClasses/controllers.adoc[]
 
 === Services
 
+This section describes {app} service layer classes.
+
 include::{snippetsDir}/DocTest/documentClasses/services.adoc[]
 
 === Repositories
 
+This section describes {app} data access layer classes.
+
 include::{snippetsDir}/DocTest/documentClasses/repositories.adoc[]
+
+== Transactions
+
+This section describes {app}'s transactions.
+
+=== Create note transaction
+[plantuml, create-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentCreateNote/sequenceDiagram.puml[]
+----
+
+=== Update note transaction
+[plantuml, update-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentUpdateNote/sequenceDiagram.puml[]
+----
+
+=== Delete note transaction
+[plantuml, delete-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentDeleteNote/sequenceDiagram.puml[]
+----
+
+=== Get one note transaction
+[plantuml, get-one-note-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentGetNote/sequenceDiagram.puml[]
+----
+
+=== Get all notes transaction
+[plantuml, get-all-notes-sd, png]
+----
+include::{snippetsDir}/TransactionTest/documentGetAllNotes/sequenceDiagram.puml[]
+----
 
 The end.

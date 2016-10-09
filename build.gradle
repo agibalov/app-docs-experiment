@@ -2,11 +2,13 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'http://spoon.gforge.inria.fr/repositories/releases' }
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
 
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'com.github.jruby-gradle:jruby-gradle-plugin:1.2.1'
+        classpath 'com.moowork.gradle:gradle-node-plugin:0.13'
     }
 }
 
@@ -22,6 +24,7 @@ apply plugin: 'application'
 apply plugin: 'checkstyle'
 apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.github.jruby-gradle.base'
+apply plugin: 'com.moowork.node'
 
 mainClassName = 'me.loki2302.App'
 sourceCompatibility = 1.8
@@ -70,6 +73,7 @@ asciidoctor {
             sourceDir: file('src'),
             snippetsDir: snippetsDir
     ]
+    backends 'html5'
     requires = ['asciidoctor-diagram']
     gemPath = jrubyPrepare.outputDir
     dependsOn jrubyPrepare, test
@@ -91,4 +95,14 @@ tasks.withType(Checkstyle) {
         xml.enabled false
         html.enabled true
     }
+}
+
+task pdf(type: NpmTask, dependsOn: ['npmInstall', 'asciidoctor']) {
+    args = ['run-script', 'run', file('build/asciidoc/html5/app.html'), file('build/asciidoc/html5/app.pdf')]
+}
+
+node {
+    version = '6.6.0'
+    npmVersion = '3.10.3'
+    download = true
 }

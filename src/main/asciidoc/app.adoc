@@ -1,15 +1,15 @@
-:toc: left
-:toclevels: 5
+:toc: auto
+:toclevels: 3
 :sectnums:
-:sectnumlevels: 5
+:sectnumlevels: 3
 :source-highlighter: highlightjs
 :app: Notepad application
 
 = {app}
 
-This document explains what {app} is and what it is not. The sections below describe the intentions behind {app}, boring technical details and fancy diagrams.
-
 == Introduction
+
+This document explains what {app} is and what it is not. The sections below describe the intentions behind {app}, boring technical details and fancy diagrams.
 
 === Goals
 
@@ -30,7 +30,7 @@ image::tech-stack.svg[]
 
 A typical request is handled like this:
 
-[plantuml, request-handling-pipeline, png]
+[plantuml, request-handling-pipeline, svg]
 ----
 @startuml
 
@@ -71,7 +71,7 @@ This sections describes how {app} is organized in terms of packages and classes.
 * Services - business logic implementation.
 * Repositories - data access implementation.
 
-[plantuml, class-diagram, png]
+[plantuml, class-diagram, svg]
 ----
 include::{snippetsDir}/DocTest/documentClasses/classDiagram.puml[]
 ----
@@ -101,31 +101,31 @@ include::{snippetsDir}/DocTest/documentClasses/repositories.adoc[]
 This section describes {app}'s transactions.
 
 === Create note transaction
-[plantuml, create-note-sd, png]
+[plantuml, create-note-sd, svg]
 ----
 include::{snippetsDir}/TransactionTest/documentCreateNote/sequenceDiagram.puml[]
 ----
 
 === Update note transaction
-[plantuml, update-note-sd, png]
+[plantuml, update-note-sd, svg]
 ----
 include::{snippetsDir}/TransactionTest/documentUpdateNote/sequenceDiagram.puml[]
 ----
 
 === Delete note transaction
-[plantuml, delete-note-sd, png]
+[plantuml, delete-note-sd, svg]
 ----
 include::{snippetsDir}/TransactionTest/documentDeleteNote/sequenceDiagram.puml[]
 ----
 
 === Get one note transaction
-[plantuml, get-one-note-sd, png]
+[plantuml, get-one-note-sd, svg]
 ----
 include::{snippetsDir}/TransactionTest/documentGetNote/sequenceDiagram.puml[]
 ----
 
 === Get all notes transaction
-[plantuml, get-all-notes-sd, png]
+[plantuml, get-all-notes-sd, svg]
 ----
 include::{snippetsDir}/TransactionTest/documentGetAllNotes/sequenceDiagram.puml[]
 ----

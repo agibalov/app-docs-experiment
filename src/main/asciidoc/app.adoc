@@ -26,7 +26,7 @@ The {app} team firmly believes that our application makes the world better.
 
 {app} is a web application that exposes all its functionality via REST API. It uses Java and Spring as a foundation, and HSQLDB as a reliable production-grade data store.
 
-TODO: put a "deployment diagram here"
+image::tech-stack.svg[]
 
 A typical request is handled like this:
 

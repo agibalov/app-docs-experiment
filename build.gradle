@@ -61,6 +61,11 @@ asciidoctor {
     sources {
         include 'app.adoc'
     }
+    resources {
+        from(sourceDir) {
+            include '*.svg'
+        }
+    }
     attributes = [
             sourceDir: file('src'),
             snippetsDir: snippetsDir

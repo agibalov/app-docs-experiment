@@ -33,7 +33,7 @@ page.open(source, function(status) {
 	window.setTimeout(function() {
 		page.evaluate(function(zoom) {
 			return document.querySelector('body').style.zoom = zoom;
-		}, 0.85);
+		}, 0.75);
 
 		page.render(destination);
 		phantom.exit();

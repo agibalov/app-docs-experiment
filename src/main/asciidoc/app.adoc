@@ -7,6 +7,8 @@
 
 = {app}
 
+<<<
+
 == Introduction
 
 This document explains what {app} is and what it is not. The sections below describe the intentions behind {app}, boring technical details and fancy diagrams.
@@ -26,7 +28,7 @@ The {app} team firmly believes that our application makes the world better.
 
 {app} is a web application that exposes all its functionality via REST API. It uses Java and Spring as a foundation, and HSQLDB as a reliable production-grade data store.
 
-image::tech-stack.svg[]
+image::tech-stack.svg[Tech Stack, 400, 300]
 
 A typical request is handled like this:
 
@@ -63,6 +65,8 @@ end note
 @enduml
 ----
 
+<<<
+
 == Classes
 
 This sections describes how {app} is organized in terms of packages and classes. All classes are logically organized into packages:
@@ -78,11 +82,15 @@ include::{snippetsDir}/DocTest/documentClasses/classDiagram.puml[]
 
 See how controllers never depend directly on data access layer.
 
+<<<
+
 === Controllers
 
 This section describes {app} API facade classes.
 
 include::{snippetsDir}/DocTest/documentClasses/controllers.adoc[]
+
+<<<
 
 === Services
 
@@ -90,11 +98,15 @@ This section describes {app} service layer classes.
 
 include::{snippetsDir}/DocTest/documentClasses/services.adoc[]
 
+<<<
+
 === Repositories
 
 This section describes {app} data access layer classes.
 
 include::{snippetsDir}/DocTest/documentClasses/repositories.adoc[]
+
+<<<
 
 == Transactions
 
@@ -112,6 +124,8 @@ include::{snippetsDir}/TransactionTest/documentCreateNote/sequenceDiagram.puml[]
 include::{snippetsDir}/TransactionTest/documentUpdateNote/sequenceDiagram.puml[]
 ----
 
+<<<
+
 === Delete note transaction
 [plantuml, delete-note-sd, svg]
 ----
@@ -123,6 +137,8 @@ include::{snippetsDir}/TransactionTest/documentDeleteNote/sequenceDiagram.puml[]
 ----
 include::{snippetsDir}/TransactionTest/documentGetNote/sequenceDiagram.puml[]
 ----
+
+<<<
 
 === Get all notes transaction
 [plantuml, get-all-notes-sd, svg]

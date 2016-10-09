@@ -26,6 +26,43 @@ The {app} team firmly believes that our application makes the world better.
 
 {app} is a web application that exposes all its functionality via REST API. It uses Java and Spring as a foundation, and HSQLDB as a reliable production-grade data store.
 
+TODO: put a "deployment diagram here"
+
+A typical request is handled like this:
+
+[plantuml, request-handling-pipeline, png]
+----
+@startuml
+
+title Request handling pipeline
+
+actor Client
+
+box "Application" #fff
+    participant API
+    participant Service
+end box
+
+note over Client
+    Client wants
+    to make a request
+end note
+Client -> API : Please do this thing for me
+API -> Service : This guy wants us to do this thing
+note over Service
+    omg...
+    a request...
+    again...
+end note
+API <-- Service : OK, tell them it's done
+Client <-- API : It's done
+note over Client
+    Client is happy
+end note
+
+@enduml
+----
+
 == Classes
 
 This sections describes how {app} is organized in terms of packages and classes. All classes are logically organized into packages:

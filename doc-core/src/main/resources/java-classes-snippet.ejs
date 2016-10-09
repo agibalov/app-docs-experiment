@@ -1,3 +1,32 @@
+<%
+function shortName(name) {
+    var components = name.split('\\.');
+    return components[components.length - 1];
+}
+
+function makeMethodSignature(method) {
+    var signature = '';
+
+    signature += 'public ';
+
+    signature += shortName(method.returnTypeName) + ' ';
+    signature += method.name;
+    signature += '(';
+    for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
+        var parameter = method.parameters.get(parameterIndex);
+        signature += '\n  ' + shortName(parameter.typeName) + ' ' + parameter.name;
+        if(parameterIndex != method.parameters.size() - 1) {
+            signature += ',';
+        } else {
+            signature += '\n';
+        }
+    }
+    signature += ')';
+
+    return signature;
+}
+%>
+
 <% for(var classIndex = 0; classIndex < model.size(); ++classIndex) {
     var clazz = model.get(classIndex);
     if(!clazz.isDocumented) continue; %>
@@ -20,7 +49,7 @@ _<%= clazz.name %> does not have any fields._
             var field = clazz.fields.get(fieldIndex);
             if(!field.isDocumented) continue; %>
 
-| `<%= field.name %>` | `<%= field.typeName %>` | <%= field.description %>
+| `<%= field.name %>` | `<%= shortName(field.typeName) %>` | <%= field.description %>
         <% } %>
 |===
     <% } %>
@@ -36,6 +65,11 @@ _<%= clazz.name %> does not have any methods._
 
 * Method `<%= method.name %>` - <%= method.description %>. Returns: <%= method.returnDescription %>
 
+[source,java]
+----
+<%= makeMethodSignature(method) %>
+----
+
             <% if(method.parameters.size() === 0) { %>
 _<%= clazz.name %>::<%= method.name %> does not have any parameters._
             <% } else { %>
@@ -44,7 +78,7 @@ _<%= clazz.name %>::<%= method.name %> does not have any parameters._
 | Name | Type | Description
                 <% for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
                     var parameter = method.parameters.get(parameterIndex); %>
-| `<%= parameter.name %>` | <%= parameter.typeName %> | <%= parameter.description %>
+| `<%= parameter.name %>` | <%= shortName(parameter.typeName) %> | <%= parameter.description %>
                 <% } %>
 |===
             <% } %>

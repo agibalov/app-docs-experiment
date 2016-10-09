@@ -3,6 +3,7 @@
 :toclevels: 5
 :sectnums:
 :sectnumlevels: 5
+:source-highlighter: highlightjs
 
 A very useful application to manage your all your notes.
 

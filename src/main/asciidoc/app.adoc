@@ -147,3 +147,9 @@ include::{snippetsDir}/TransactionTest/documentGetAllNotes/sequenceDiagram.puml[
 ----
 
 The end.
+
+<<<
+
+== Experimental
+
+image::{snippetsDir}/ScreenshotTest/documentScreenshot/main.png[]

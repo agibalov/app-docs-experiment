@@ -1,4 +1,4 @@
-package me.loki2302.dtos;
+package me.loki2302.app.dtos;
 
 /**
  * @undocumented

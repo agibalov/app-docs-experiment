@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "chromedriver": "^2.24.1",
     "phantomjs-prebuilt": "^2.1.13"
   }
 }

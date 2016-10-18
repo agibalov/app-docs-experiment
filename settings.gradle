@@ -2,4 +2,3 @@ rootProject.name = 'app-docs-experiment'
 include 'doc-core'
 include 'doc-core-api'
 include 'front-end'
-

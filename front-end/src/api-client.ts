@@ -9,19 +9,19 @@ export class ApiClient {
     }
 
     async getNotes(): Promise<NoteWithIdDto[]> {
-        const response: Response = await this.http.get('http://localhost:9090/api/notes').toPromise();
+        const response: Response = await this.http.get('/api/notes').toPromise();
         const body: NoteWithIdDto[] = response.json();
         return body;
     }
 
     async getNote(noteId: number): Promise<NoteWithIdDto> {
-        const response: Response = await this.http.get(`http://localhost:9090/api/notes/${noteId}`).toPromise();
+        const response: Response = await this.http.get(`/api/notes/${noteId}`).toPromise();
         const body: NoteWithIdDto = response.json();
         return body;
     }
 
     async createNote(noteDto: NoteDto): Promise<NoteWithIdDto> {
-        const createNoteResponse: Response = await this.http.post('http://localhost:9090/api/notes', noteDto).toPromise();
+        const createNoteResponse: Response = await this.http.post('/api/notes', noteDto).toPromise();
         const createdNoteLocation: string = createNoteResponse.headers.get('location');
 
         const getCreatedNoteResponse = await this.http.get(createdNoteLocation).toPromise();
@@ -31,7 +31,7 @@ export class ApiClient {
     }
 
     async updateNote(noteId: number, noteDto: NoteDto): Promise<NoteWithIdDto> {
-        const noteUrl: string = `http://localhost:9090/api/notes/${noteId}`;
+        const noteUrl: string = `/api/notes/${noteId}`;
         const updateNoteResponse: Response = await this.http.put(noteUrl, noteDto).toPromise();
 
         const getUpdatedNoteResponse = await this.http.get(noteUrl).toPromise();
@@ -41,7 +41,7 @@ export class ApiClient {
     }
 
     async deleteNote(noteId: number): Promise<void> {
-        const noteUrl = `http://localhost:9090/api/notes/${noteId}`;
+        const noteUrl = `/api/notes/${noteId}`;
         const response: Response = await this.http.delete(noteUrl).toPromise();
     }
 }

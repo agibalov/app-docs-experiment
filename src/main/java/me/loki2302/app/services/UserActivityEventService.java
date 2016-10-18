@@ -1,7 +1,7 @@
-package me.loki2302.services;
+package me.loki2302.app.services;
 
-import me.loki2302.persistence.UserActivityEvent;
-import me.loki2302.persistence.UserActivityEventRepository;
+import me.loki2302.app.persistence.UserActivityEvent;
+import me.loki2302.app.persistence.UserActivityEventRepository;
 import me.loki2302.spring.TransactionComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

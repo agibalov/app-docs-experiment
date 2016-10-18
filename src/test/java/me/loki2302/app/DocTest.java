@@ -1,4 +1,4 @@
-package me.loki2302;
+package me.loki2302.app;
 
 import me.loki2302.core.CodeReader;
 import me.loki2302.core.CodebaseModel;

@@ -26,7 +26,7 @@ apply plugin: 'org.asciidoctor.convert'
 apply plugin: 'com.github.jruby-gradle.base'
 apply plugin: 'com.moowork.node'
 
-mainClassName = 'me.loki2302.App'
+mainClassName = 'me.loki2302.app.App'
 sourceCompatibility = 1.8
 
 repositories {
@@ -37,6 +37,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
+    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
     testCompile project(':doc-core')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.4.0.RELEASE'
@@ -55,6 +56,7 @@ ext {
 test {
     systemProperty 'snippetsDir', snippetsDir
     systemProperty 'classpath', configurations.runtime.join(',')
+    systemProperty 'webdriver.chrome.driver', 'node_modules/chromedriver/bin/chromedriver'
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
     dependsOn checkstyleMain

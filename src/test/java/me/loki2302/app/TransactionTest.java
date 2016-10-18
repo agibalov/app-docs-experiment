@@ -1,10 +1,10 @@
-package me.loki2302;
+package me.loki2302.app;
 
 import me.loki2302.documentation.SnippetWriter;
 import me.loki2302.documentation.snippets.SequenceDiagramSnippet;
-import me.loki2302.dtos.NoteDto;
-import me.loki2302.dtos.NoteWithIdDto;
-import me.loki2302.services.NoteService;
+import me.loki2302.app.dtos.NoteDto;
+import me.loki2302.app.dtos.NoteWithIdDto;
+import me.loki2302.app.services.NoteService;
 import me.loki2302.spring.EnableTransactionTracing;
 import me.loki2302.spring.TransactionRecorder;
 import me.loki2302.spring.TransactionScript;
@@ -20,6 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
@@ -152,7 +153,8 @@ public class TransactionTest {
     public static class Config {
         @Bean
         public RestTemplate restTemplate() {
-            return new RestTemplate();
+            HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+            return new RestTemplate(requestFactory);
         }
     }
 }

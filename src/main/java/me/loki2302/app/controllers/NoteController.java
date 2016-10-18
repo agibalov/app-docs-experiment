@@ -1,12 +1,12 @@
-package me.loki2302.controllers;
+package me.loki2302.app.controllers;
 
-import me.loki2302.dtos.NoteDto;
-import me.loki2302.dtos.NoteWithIdDto;
-import me.loki2302.persistence.Note;
-import me.loki2302.persistence.UserActivityEvent;
-import me.loki2302.services.NoteService;
-import me.loki2302.services.UserActivityEventFactory;
-import me.loki2302.services.UserActivityEventService;
+import me.loki2302.app.dtos.NoteDto;
+import me.loki2302.app.dtos.NoteWithIdDto;
+import me.loki2302.app.persistence.Note;
+import me.loki2302.app.persistence.UserActivityEvent;
+import me.loki2302.app. services.NoteService;
+import me.loki2302.app.services.UserActivityEventFactory;
+import me.loki2302.app.services.UserActivityEventService;
 import me.loki2302.spring.TransactionEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package me.loki2302.services;
+package me.loki2302.app.services;
 
-import me.loki2302.persistence.UserActivityEvent;
+import me.loki2302.app.persistence.UserActivityEvent;
 import me.loki2302.spring.TransactionComponent;
 import org.springframework.stereotype.Component;
 

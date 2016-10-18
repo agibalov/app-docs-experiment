@@ -1,6 +1,6 @@
-package me.loki2302;
+package me.loki2302.app;
 
-import me.loki2302.dtos.AboutApiDto;
+import me.loki2302.app.dtos.AboutApiDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

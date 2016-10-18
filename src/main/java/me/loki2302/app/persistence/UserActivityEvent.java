@@ -1,4 +1,4 @@
-package me.loki2302.persistence;
+package me.loki2302.app.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

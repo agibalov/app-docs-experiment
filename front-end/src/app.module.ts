@@ -2,6 +2,7 @@ import {NgModule, Injectable, OnInit} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Component } from "@angular/core";
 import {Http, Response, HttpModule} from "@angular/http";
+import {FormsModule} from "@angular/forms";
 
 interface NoteDto {
     text: string;
@@ -63,7 +64,10 @@ interface Note {
     selector: 'app',
     template: `
 <div>
-    <button type="button" (click)="createDummyNote()">Create Dummy Note</button>
+    <form (ngSubmit)="createNote()">
+        <input type="text" [(ngModel)]="newNoteText" name="text">
+        <button type="submit">Create</button>
+    </form>
     <div *ngIf="notes.length > 0">
         <p>There are {{notes.length}} notes</p>
         <ul>
@@ -81,6 +85,7 @@ interface Note {
 })
 class AppComponent implements OnInit {
     public notes: Note[] = [];
+    public newNoteText: string = '';
 
     constructor(private apiClient: ApiClient) {
     }
@@ -92,12 +97,20 @@ class AppComponent implements OnInit {
         })
     }
 
-    async createDummyNote(): Promise<void> {
-        const dummyNoteDto: NoteDto = {
-            text: 'Note #' + Date.now()
+    async createNote(): Promise<void> {
+        const text: string = this.newNoteText;
+        if(text == '') {
+            return;
+        }
+
+        this.newNoteText = '';
+
+        const noteDto: NoteDto = {
+            text: text
         };
-        const noteDto: NoteWithIdDto = await this.apiClient.createNote(dummyNoteDto);
-        const note: Note = this.noteFromNoteWithIdDto(noteDto);
+
+        const createdNoteDto: NoteWithIdDto = await this.apiClient.createNote(noteDto);
+        const note: Note = this.noteFromNoteWithIdDto(createdNoteDto);
         this.notes.push(note);
     }
 
@@ -135,7 +148,7 @@ class AppComponent implements OnInit {
 }
 
 @NgModule({
-    imports: [ BrowserModule, HttpModule ],
+    imports: [ BrowserModule, FormsModule, HttpModule ],
     declarations: [
         AppComponent
     ],

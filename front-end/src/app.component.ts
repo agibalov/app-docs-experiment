@@ -7,23 +7,34 @@ import {ApiClient} from "./api-client";
 @Component({
     selector: 'app',
     template: `
-<div>
-    <form (ngSubmit)="createNote()">
-        <input type="text" [(ngModel)]="newNoteText" name="text">
-        <button type="submit">Create</button>
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Notepad</a>
+    </div>
+</div>
+</nav>
+<div class="container">
+    <form (ngSubmit)="createNote()" class="form-inline">
+        <div class="form-group">
+            <input type="text" [(ngModel)]="newNoteText" placeholder="Type note text here" name="text" class="form-control input-lg">
+        </div>
+        <button type="submit" class="btn btn-default btn-lg">Create</button>
     </form>
     <div *ngIf="notes.length > 0">
-        <p>There are {{notes.length}} notes</p>
-        <ul>
-            <li *ngFor="let note of notes;trackBy:id">
-                <span>id={{note.id}}</span>
-                <span>text={{note.text}}</span>
-                <button type="button" (click)="updateNote(note.id)">Update</button>
-                <button type="button" (click)="deleteNote(note.id)">Delete</button>
-            </li>
-        </ul>
+        <table class="table">
+            <caption>There are {{notes.length}} notes</caption>
+            <tr *ngFor="let note of notes;trackBy:id">
+                <td class="col-md-1"><span class="badge">{{note.id}}</span></td>
+                <td class="col-md-8">{{note.text}}</td>
+                <td class="col-md-3 text-right">
+                    <button type="button" (click)="updateNote(note.id)" class="btn btn-default">Update</button>
+                    <button type="button" (click)="deleteNote(note.id)" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div *ngIf="notes.length == 0">There are no notes</div> 
+    <div *ngIf="notes.length == 0" class="alert alert-info">There are no notes</div> 
 </div>
 `
 })

@@ -152,4 +152,22 @@ The end.
 
 == Experimental
 
+=== Just a screenshot
+
 image::{snippetsDir}/ScreenshotTest/documentScreenshot/main.png[]
+
+=== Creating a note
+
+Making notes is crucial. Let's get started with an empty {app}, where there are no notes at all. See how empty it is. It is up to us to create the very first note.
+
+image::{snippetsDir}/ScreenshotTest/documentCreateNoteScenario/1.png[]
+
+To do so, we first type note text into a text box:
+
+image::{snippetsDir}/ScreenshotTest/documentCreateNoteScenario/2.png[]
+
+After it, we click the "Create" button. And once we do that, a new note should appear on the list of notes:
+
+image::{snippetsDir}/ScreenshotTest/documentCreateNoteScenario/3.png[]
+
+Done.

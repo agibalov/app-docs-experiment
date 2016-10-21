@@ -45,7 +45,6 @@ public class ScreenshotTest {
         noteService.createNote("I am test note five");
 
         webDriver.get("http://localhost:8080/");
-        webDriverUtils.synchronizeAngular2();
         screenshotWriter.write("main.png", webDriverUtils.makeScreenshot());
     }
 
@@ -72,19 +71,14 @@ public class ScreenshotTest {
     @Test
     public void documentCreateNoteScenario() {
         webDriver.get("http://localhost:8080/");
-        webDriverUtils.synchronizeAngular2();
         screenshotWriter.write("1.png", webDriverUtils.makeScreenshot());
 
-        WebElement textInputElement = webDriver.findElement(By.cssSelector("input[type=\"text\""));
+        WebElement textInputElement = webDriver.findElement(By.cssSelector("input[type=\"text\"]"));
         textInputElement.sendKeys("My first note");
-        webDriverUtils.synchronizeAngular2();
         screenshotWriter.write("2.png", webDriverUtils.makeScreenshot());
 
         WebElement submitButtonElement = webDriver.findElement(By.cssSelector("button[type=\"submit\"]"));
         submitButtonElement.click();
-        // TODO: consider a sort of while(true) { sync(); }
-        webDriverUtils.synchronizeAngular2(); // create note
-        webDriverUtils.synchronizeAngular2(); // get note
         screenshotWriter.write("3.png", webDriverUtils.makeScreenshot());
     }
 

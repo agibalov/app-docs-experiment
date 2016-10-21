@@ -7,6 +7,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,11 +28,24 @@ public class WebDriverConfiguration {
         chromeDriver.manage().timeouts().setScriptTimeout(5, TimeUnit.SECONDS);
         chromeDriver.manage().window().setSize(new Dimension(1366, 768));
 
-        return chromeDriver;
+        EventFiringWebDriver eventFiringWebDriver = new EventFiringWebDriver(chromeDriver);
+        eventFiringWebDriver.register(synchronizingWebDriverEventListener());
+
+        return eventFiringWebDriver;
     }
 
     @Bean
     public WebDriverUtils webDriverUtils() {
         return new WebDriverUtils();
+    }
+
+    @Bean
+    public Angular2Synchronizer angular2Synchronizer() {
+        return new Angular2Synchronizer();
+    }
+
+    @Bean
+    public SynchronizingWebDriverEventListener synchronizingWebDriverEventListener() {
+        return new SynchronizingWebDriverEventListener();
     }
 }

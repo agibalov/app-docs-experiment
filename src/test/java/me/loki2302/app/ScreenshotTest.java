@@ -1,7 +1,8 @@
 package me.loki2302.app;
 
 import me.loki2302.app.services.NoteService;
-import me.loki2302.webdriver.ScreenshotWriter;
+import me.loki2302.documentation.SnippetWriter;
+import me.loki2302.documentation.snippets.FileSnippet;
 import me.loki2302.webdriver.WebDriverConfiguration;
 import me.loki2302.webdriver.WebDriverUtils;
 import org.junit.Rule;
@@ -25,7 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ScreenshotTest {
     @Rule
-    public ScreenshotWriter screenshotWriter = new ScreenshotWriter(System.getProperty("snippetsDir"));
+    public SnippetWriter screenshotWriter = new SnippetWriter(System.getProperty("snippetsDir"));
 
     @Autowired
     private WebDriver webDriver;
@@ -45,7 +46,7 @@ public class ScreenshotTest {
         noteService.createNote("I am test note five");
 
         webDriver.get("http://localhost:8080/");
-        screenshotWriter.write("main.png", webDriverUtils.makeScreenshot());
+        screenshotWriter.write("main.png", new FileSnippet(webDriverUtils.makeScreenshot()));
     }
 
     // TODO: consider using Javadoc to describe the scenario. Example:
@@ -71,15 +72,15 @@ public class ScreenshotTest {
     @Test
     public void documentCreateNoteScenario() {
         webDriver.get("http://localhost:8080/");
-        screenshotWriter.write("1.png", webDriverUtils.makeScreenshot());
+        screenshotWriter.write("1.png", new FileSnippet(webDriverUtils.makeScreenshot()));
 
         WebElement textInputElement = webDriver.findElement(By.cssSelector("input[type=\"text\"]"));
         textInputElement.sendKeys("My first note");
-        screenshotWriter.write("2.png", webDriverUtils.makeScreenshot());
+        screenshotWriter.write("2.png", new FileSnippet(webDriverUtils.makeScreenshot()));
 
         WebElement submitButtonElement = webDriver.findElement(By.cssSelector("button[type=\"submit\"]"));
         submitButtonElement.click();
-        screenshotWriter.write("3.png", webDriverUtils.makeScreenshot());
+        screenshotWriter.write("3.png", new FileSnippet(webDriverUtils.makeScreenshot()));
     }
 
     @Configuration

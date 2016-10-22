@@ -3,6 +3,7 @@ package me.loki2302.documentation;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import me.loki2302.documentation.responses.EjsSnippetResponse;
+import me.loki2302.documentation.responses.FileSnippetResponse;
 import me.loki2302.documentation.responses.PlainTextSnippetResponse;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -13,6 +14,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,10 +66,15 @@ public class SnippetWriter implements TestRule {
         public void renderSnippet(String name, Snippet snippet) throws IOException {
             SnippetResponse snippetResponse = snippet.render();
 
-            String content;
-            if(snippetResponse instanceof PlainTextSnippetResponse) {
+            Path path = snippetsDirectoryPath.resolve(name);
+            if(snippetResponse instanceof FileSnippetResponse) {
+                FileSnippetResponse fileSnippetResponse = (FileSnippetResponse)snippetResponse;
+                File sourceFile = fileSnippetResponse.sourceFile;
+                Files.copy(sourceFile.toPath(), path);
+            } else if(snippetResponse instanceof PlainTextSnippetResponse) {
                 PlainTextSnippetResponse plainTextSnippetResponse = (PlainTextSnippetResponse)snippetResponse;
-                content = plainTextSnippetResponse.content;
+                String content = plainTextSnippetResponse.content;
+                Files.write(path, Collections.singleton(content));
             } else if(snippetResponse instanceof EjsSnippetResponse) {
                 EjsSnippetResponse ejsSnippetResponse = (EjsSnippetResponse)snippetResponse;
                 String templateName = ejsSnippetResponse.templateName;
@@ -90,12 +97,14 @@ public class SnippetWriter implements TestRule {
                     context.evaluateString(scope, "window = {}", "browser.js", 1, null);
                     context.evaluateString(scope, ejsString, "ejs.js", 1, null);
 
-                    content = (String)context.evaluateString(
+                    String content = (String)context.evaluateString(
                             scope,
                             "window.ejs.render(template, { model: model })",
                             "renderer.js",
                             1,
                             null);
+
+                    Files.write(path, Collections.singleton(content));
                 } finally {
                     context.exit();
                 }
@@ -105,9 +114,6 @@ public class SnippetWriter implements TestRule {
                         " of type " +
                         snippetResponse.getClass().getName());
             }
-
-            Path path = snippetsDirectoryPath.resolve(name);
-            Files.write(path, Collections.singleton(content));
         }
     }
 }

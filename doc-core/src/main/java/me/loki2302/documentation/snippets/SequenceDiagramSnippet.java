@@ -4,6 +4,7 @@ import me.loki2302.documentation.Snippet;
 import me.loki2302.documentation.SnippetResponse;
 import me.loki2302.documentation.responses.EjsSnippetResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,4 +29,5 @@ public class SequenceDiagramSnippet implements Snippet {
         public String title;
         public List<String> links;
     }
+
 }

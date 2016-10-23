@@ -108,8 +108,9 @@ function readMethodParameter(parameterSymbol: ts.Symbol, typeChecker: ts.TypeChe
 export function readCode(fileNames: string[]): CodeModel {
     const program: ts.Program = ts.createProgram(
         fileNames, {
-            target: ts.ScriptTarget.ES5,
-            module: ts.ModuleKind.CommonJS
+            target: ts.ScriptTarget.ES6,
+            module: ts.ModuleKind.CommonJS,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs
         });
 
     const typeChecker: ts.TypeChecker = program.getTypeChecker();

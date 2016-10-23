@@ -152,6 +152,15 @@ The end.
 
 == Experimental
 
+=== Front end class diagram
+
+[plantuml, fe-class-diagram, svg]
+----
+include::{snippetsDir}/FrontEndDocTest/documentClasses/classDiagram.puml[]
+----
+
+<<<
+
 === Front end classes
 
 include::{snippetsDir}/FrontEndDocTest/documentClasses/classes.adoc[]

@@ -5,5 +5,6 @@ import java.util.List;
 public class TypeScriptClassModel {
     public String name;
     public String comment;
+    public TypeScriptConstructorModel ctor;
     public List<TypeScriptMethodModel> methods;
 }

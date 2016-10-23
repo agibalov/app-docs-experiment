@@ -5,6 +5,9 @@ import { FormsModule } from "@angular/forms";
 import {ApiClient} from "./api-client";
 import {AppComponent} from "./app.component";
 
+/**
+ * Represent the main application model.
+ */
 @NgModule({
     imports: [ BrowserModule, FormsModule, HttpModule ],
     declarations: [

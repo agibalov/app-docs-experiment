@@ -1,23 +1,65 @@
+<%
+function makeMethodSignature(method) {
+    var signature = '';
+
+    signature += method.name;
+    signature += '(';
+
+    for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
+        var parameter = method.parameters.get(parameterIndex);
+        signature += '\n  ' + parameter.name + ': ' + parameter.type;
+        if(parameterIndex != method.parameters.size() - 1) {
+            signature += ',';
+        } else {
+            signature += '\n';
+        }
+    }
+    signature += ')';
+    signature += ': ' + method.returnType;
+
+    return signature;
+}
+%>
+
 <% for(var fileIndex = 0; fileIndex < model.files.size(); ++fileIndex) {
     var file = model.files.get(fileIndex); %>
 
-==== File <%= file.name %> has <%= file.classes.size() %> classes.
+        <% for(var classIndex = 0; classIndex < file.classes.size(); ++classIndex) {
+            var clazz = file.classes.get(classIndex); %>
 
-    <% for(var classIndex = 0; classIndex < file.classes.size(); ++classIndex) {
-        var clazz = file.classes.get(classIndex); %>
+==== Class <%= clazz.name %>
 
-Class <%= clazz.name %> has <%= clazz.methods.size() %> methods. Comment: <%= clazz.comment %>
+<%= clazz.comment %>
 
-        <% for(var methodIndex = 0; methodIndex < clazz.methods.size(); ++methodIndex) {
-            var method = clazz.methods.get(methodIndex); %>
+        <% if(clazz.methods.size() === 0) { %>
+_<%= clazz.name %> does not have any methods._
+        <% } else { %>
+            <% for(var methodIndex = 0; methodIndex < clazz.methods.size(); ++methodIndex) {
+                var method = clazz.methods.get(methodIndex); %>
 
-Method <%= method.name %> has <%= method.parameters.size() %> parameters. Comment: <%= method.comment %>. Returns: <%= method.returnType %>.
+===== <%= method.name %>
 
-            <% for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
-                var parameter = method.parameters.get(parameterIndex); %>
+[source,java]
+----
+<%= makeMethodSignature(method) %>
+----
 
-Parameter <%= parameter.name %> is of type <%= parameter.type %>. Comment: <%= parameter.comment %>
+<%= method.comment %>
 
+                <% if(method.parameters.size() > 0) { %>
+[options="header"]
+|===
+| Name | Type | Description
+                    <% for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
+                        var parameter = method.parameters.get(parameterIndex); %>
+| `<%= parameter.name %>` | `<%= parameter.type %>` | <%= parameter.comment %>
+                    <% } %>
+|===
+                <% } %>
+
+Returns: <%= method.returnType %>
+
+'''
             <% } %>
         <% } %>
     <% } %>

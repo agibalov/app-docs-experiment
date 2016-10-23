@@ -4,6 +4,9 @@ import {NoteDto} from "./note-dto";
 import {Component, OnInit} from "@angular/core";
 import {ApiClient} from "./api-client";
 
+/**
+ * A component that represents the one and only application page.
+ */
 @Component({
     selector: 'app',
     template: `
@@ -45,6 +48,9 @@ export class AppComponent implements OnInit {
     constructor(private apiClient: ApiClient) {
     }
 
+    /**
+     * Initialize - retrieve a collection of all notes.
+     */
     async ngOnInit(): Promise<void> {
         const noteDtos: NoteWithIdDto[] = await this.apiClient.getNotes();
         this.notes = noteDtos.map((noteDto) => {
@@ -52,6 +58,9 @@ export class AppComponent implements OnInit {
         })
     }
 
+    /**
+     * Create a note based on user input.
+     */
     async createNote(): Promise<void> {
         const text: string = this.newNoteText;
         if(text == '') {
@@ -69,6 +78,10 @@ export class AppComponent implements OnInit {
         this.notes.push(note);
     }
 
+    /**
+     * Update a note based on user input.
+     * @param noteId an ID of note to update
+     */
     async updateNote(noteId: number): Promise<void> {
         const updatedNoteDto: NoteDto = {
             text: 'Updated note'
@@ -83,6 +96,10 @@ export class AppComponent implements OnInit {
         });
     }
 
+    /**
+     * Delete a note based on user input.
+     * @param noteId an ID of note to delete.
+     */
     async deleteNote(noteId: number): Promise<void> {
         await this.apiClient.deleteNote(noteId);
         this.notes = this.notes.filter(note => {
@@ -94,6 +111,11 @@ export class AppComponent implements OnInit {
         });
     }
 
+    /**
+     * Construct a note from note DTO.
+     * @param noteWithIdDto a note data transfer object
+     * @returns {{id: number, text: string}} a constructed note
+     */
     private noteFromNoteWithIdDto(noteWithIdDto: NoteWithIdDto): Note {
         return {
             id: noteWithIdDto.id,

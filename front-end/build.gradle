@@ -34,6 +34,7 @@ jar {
     into('resources') {
         from('dist') {
             include 'bundle.js'
+            include 'code-model.json'
         }
         from('src') {
             include 'index.html'

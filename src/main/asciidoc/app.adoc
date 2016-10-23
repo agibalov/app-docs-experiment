@@ -152,6 +152,12 @@ The end.
 
 == Experimental
 
+=== Front end classes
+
+include::{snippetsDir}/FrontEndDocTest/documentClasses/classes.adoc[]
+
+<<<
+
 === Just a screenshot
 
 image::{snippetsDir}/ScreenshotTest/documentScreenshot/main.png[]

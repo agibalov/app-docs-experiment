@@ -1,0 +1,24 @@
+<% for(var fileIndex = 0; fileIndex < model.files.size(); ++fileIndex) {
+    var file = model.files.get(fileIndex); %>
+
+==== File <%= file.name %> has <%= file.classes.size() %> classes.
+
+    <% for(var classIndex = 0; classIndex < file.classes.size(); ++classIndex) {
+        var clazz = file.classes.get(classIndex); %>
+
+Class <%= clazz.name %> has <%= clazz.methods.size() %> methods. Comment: <%= clazz.comment %>
+
+        <% for(var methodIndex = 0; methodIndex < clazz.methods.size(); ++methodIndex) {
+            var method = clazz.methods.get(methodIndex); %>
+
+Method <%= method.name %> has <%= method.parameters.size() %> parameters. Comment: <%= method.comment %>. Returns: <%= method.returnType %>.
+
+            <% for(var parameterIndex = 0; parameterIndex < method.parameters.size(); ++parameterIndex) {
+                var parameter = method.parameters.get(parameterIndex); %>
+
+Parameter <%= parameter.name %> is of type <%= parameter.type %>. Comment: <%= parameter.comment %>
+
+            <% } %>
+        <% } %>
+    <% } %>
+<% } %>

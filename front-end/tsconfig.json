@@ -8,7 +8,7 @@
     "lib": ["dom", "es6"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "types": []
+    "types": ["node", "glob"]
   },
   "exclude": [
     "node_modules"

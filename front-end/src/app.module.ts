@@ -6,7 +6,7 @@ import {ApiClient} from "./api-client";
 import {AppComponent} from "./app.component";
 
 /**
- * Represent the main application model.
+ * Represent the main application module.
  */
 @NgModule({
     imports: [ BrowserModule, FormsModule, HttpModule ],

@@ -57,7 +57,7 @@ _<%= clazz.name %> does not have any methods._
 |===
                 <% } %>
 
-Returns: <%= method.returnType %>
+Returns: <%= !!method.returnComment ? method.returnComment : method.returnType %>
 
 '''
             <% } %>

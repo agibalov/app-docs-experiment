@@ -19,6 +19,7 @@ export interface MethodModel {
     name: string;
     comment: string;
     returnType: string;
+    returnComment: string;
     parameters: ParameterModel[];
 }
 
@@ -69,7 +70,11 @@ function readMethod(methodDeclaration: ts.MethodDeclaration, typeChecker: ts.Typ
 
     // methodComment includes @returns
     // see https://github.com/Microsoft/TypeScript/issues/9844
-    const methodComment: string = ts.displayPartsToString(methodSymbol.getDocumentationComment());
+    //const methodComment: string = ts.displayPartsToString(methodSymbol.getDocumentationComment());
+    const commentParts: ts.SymbolDisplayPart[] = methodSymbol.getDocumentationComment();
+    const pureComment = commentParts.map((part) => part.text).filter((text) => !/^@returns/.test(text)).join('').trim();
+    const returnComments = commentParts.map((part) => part.text).filter((text) => /^@returns/.test(text));
+    let returnComment = returnComments.length > 0 ? returnComments[0].match(/^@returns\s(\{.+\})?\s?(.+)$/)[2] : null;
 
     const methodType: ts.Type = typeChecker.getTypeOfSymbolAtLocation(methodSymbol, methodSymbol.valueDeclaration);
     const callSignatures: ts.Signature[] = methodType.getCallSignatures();
@@ -84,8 +89,9 @@ function readMethod(methodDeclaration: ts.MethodDeclaration, typeChecker: ts.Typ
 
     return {
         name: methodName,
-        comment: methodComment,
+        comment: pureComment,
         returnType: returnTypeString,
+        returnComment: returnComment,
         parameters: callSignature.getParameters()
             .map((parameterSymbol: ts.Symbol) => readMethodParameter(parameterSymbol, typeChecker))
     };

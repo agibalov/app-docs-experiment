@@ -48,4 +48,9 @@ public class WebDriverConfiguration {
     public SynchronizingWebDriverEventListener synchronizingWebDriverEventListener() {
         return new SynchronizingWebDriverEventListener();
     }
+
+    @Bean
+    public FrontEndTransactionFacade frontEndTransactionFacade() {
+        return new FrontEndTransactionFacade();
+    }
 }

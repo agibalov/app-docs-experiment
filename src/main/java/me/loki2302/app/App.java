@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @undocumented
  */
-@EnableTransactionLogging
+@EnableTransactionLogging // TODO: remove it once done with development
 @SpringBootApplication
 public class App {
     public static void main(String[] args) {

@@ -5,17 +5,17 @@ import { FormsModule } from "@angular/forms";
 import {ApiClient} from "./api-client";
 import {AppComponent} from "./app.component";
 import {TransactionRecorder} from "./transaction-recorder";
-import {HttpWrapper} from "./http-wrapper";
+import {HttpClient} from "./http-client";
 
 /**
- * Represent the main application module.
+ * Represents the main application module.
  */
 @NgModule({
     imports: [ BrowserModule, FormsModule, HttpModule ],
     declarations: [
         AppComponent
     ],
-    providers: [ ApiClient, TransactionRecorder, HttpWrapper ],
+    providers: [ ApiClient, TransactionRecorder, HttpClient ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule {

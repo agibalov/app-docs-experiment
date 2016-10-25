@@ -3,7 +3,7 @@ import {Response} from "@angular/http";
 import {NoteWithIdDto} from "./note-with-id-dto";
 import {NoteDto} from "./note-dto";
 import {Wove} from "aspect.js-angular";
-import {HttpWrapper} from "./http-wrapper";
+import {HttpClient} from "./http-client";
 
 /**
  * Notepad service API client.
@@ -11,7 +11,7 @@ import {HttpWrapper} from "./http-wrapper";
 @Wove()
 @Injectable()
 export class ApiClient {
-    constructor(private http: HttpWrapper) {
+    constructor(private httpClient: HttpClient) {
     }
 
     /**
@@ -19,7 +19,7 @@ export class ApiClient {
      * @returns {NoteWithIdDto[]} a collection of notes
      */
     async getNotes(): Promise<NoteWithIdDto[]> {
-        const response: Response = await this.http.get('/api/notes');
+        const response: Response = await this.httpClient.get('/api/notes');
         const body: NoteWithIdDto[] = response.json();
         return body;
     }
@@ -30,7 +30,7 @@ export class ApiClient {
      * @returns {NoteWithIdDto} a retrieved note
      */
     async getNote(noteId: number): Promise<NoteWithIdDto> {
-        const response: Response = await this.http.get(`/api/notes/${noteId}`);
+        const response: Response = await this.httpClient.get(`/api/notes/${noteId}`);
         const body: NoteWithIdDto = response.json();
         return body;
     }
@@ -41,10 +41,10 @@ export class ApiClient {
      * @returns {NoteWithIdDto} a created note
      */
     async createNote(noteDto: NoteDto): Promise<NoteWithIdDto> {
-        const createNoteResponse: Response = await this.http.post('/api/notes', noteDto);
+        const createNoteResponse: Response = await this.httpClient.post('/api/notes', noteDto);
         const createdNoteLocation: string = createNoteResponse.headers.get('location');
 
-        const getCreatedNoteResponse = await this.http.get(createdNoteLocation);
+        const getCreatedNoteResponse = await this.httpClient.get(createdNoteLocation);
         const createdNoteDto: NoteWithIdDto = getCreatedNoteResponse.json();
 
         return createdNoteDto;
@@ -58,9 +58,9 @@ export class ApiClient {
      */
     async updateNote(noteId: number, noteDto: NoteDto): Promise<NoteWithIdDto> {
         const noteUrl: string = `/api/notes/${noteId}`;
-        const updateNoteResponse: Response = await this.http.put(noteUrl, noteDto);
+        const updateNoteResponse: Response = await this.httpClient.put(noteUrl, noteDto);
 
-        const getUpdatedNoteResponse = await this.http.get(noteUrl);
+        const getUpdatedNoteResponse = await this.httpClient.get(noteUrl);
         const updatedNoteDto: NoteWithIdDto = getUpdatedNoteResponse.json();
 
         return updatedNoteDto;
@@ -72,6 +72,6 @@ export class ApiClient {
      */
     async deleteNote(noteId: number): Promise<void> {
         const noteUrl = `/api/notes/${noteId}`;
-        const response: Response = await this.http.delete(noteUrl);
+        await this.httpClient.delete(noteUrl);
     }
 }

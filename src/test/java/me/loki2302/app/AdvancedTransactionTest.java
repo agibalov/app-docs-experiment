@@ -1,12 +1,9 @@
 package me.loki2302.app;
 
-import me.loki2302.app.services.NoteService;
 import me.loki2302.documentation.SnippetWriter;
-import me.loki2302.documentation.snippets.FileSnippet;
 import me.loki2302.spring.advanced.EnableTransactionLogging;
 import me.loki2302.webdriver.FrontEndTransactionFacade;
 import me.loki2302.webdriver.WebDriverConfiguration;
-import me.loki2302.webdriver.WebDriverUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -37,12 +33,6 @@ public class AdvancedTransactionTest {
 
     @Autowired
     private WebDriver webDriver;
-
-    @Autowired
-    private WebDriverUtils webDriverUtils;
-
-    @Autowired
-    private NoteService noteService;
 
     @Autowired
     private FrontEndTransactionFacade frontEndTransactionFacade;

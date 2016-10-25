@@ -1,14 +1,15 @@
-import {Http, Request, RequestOptionsArgs, Response, ConnectionBackend, RequestOptions} from "@angular/http";
+import {Http, Request, RequestOptionsArgs, Response} from "@angular/http";
 import {Injectable} from "@angular/core";
 import {Wove} from "aspect.js-angular";
 import {TransactionRecorder} from "./transaction-recorder";
 import {BETransactionRecord} from "./be-transaction-record";
 
-// TODO: what is the easier way to add @Wove() to Http?
-// TODO: try to 'extend' and override provider
+/**
+ * TODO: document this
+ */
 @Wove()
 @Injectable()
-export class HttpWrapper {
+export class HttpClient {
     constructor(
         private http: Http,
         private transactionRecorder: TransactionRecorder) {

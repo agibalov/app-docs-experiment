@@ -37,6 +37,8 @@
     "@angular/platform-browser": "^2.1.0",
     "@angular/platform-browser-dynamic": "^2.1.0",
     "@angular/upgrade": "^2.1.0",
+    "aspect.js": "^0.2.11",
+    "aspect.js-angular": "0.0.6",
     "babel-polyfill": "^6.16.0",
     "bootstrap": "^3.3.7",
     "reflect-metadata": "^0.1.8",

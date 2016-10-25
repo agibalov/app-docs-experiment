@@ -3,10 +3,12 @@ import {NoteWithIdDto} from "./note-with-id-dto";
 import {NoteDto} from "./note-dto";
 import {Component, OnInit} from "@angular/core";
 import {ApiClient} from "./api-client";
+import {Wove} from "aspect.js-angular";
 
 /**
  * A component that represents the one and only application page.
  */
+@Wove()
 @Component({
     selector: 'app',
     template: `

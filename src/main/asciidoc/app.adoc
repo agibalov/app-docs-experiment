@@ -22,19 +22,27 @@ Making notes is crucial. It's a well-known fact that 98.37611% of the people who
 * Updating the notes
 * Deleting the notes
 
-The {app} team firmly believes that our application makes the world better.
+The {app} team firmly believes that our application makes the world better. Here's what the application looks like:
+
+image::{snippetsDir}/ScreenshotTest/documentScreenshot/main.png[]
+
+Isn't this application really nice?
+
+<<<
 
 === Technical overview
 
 {app} is a web application that exposes all its functionality via REST API. It uses Java and Spring as a foundation, and HSQLDB as a reliable production-grade data store.
 
-image::tech-stack.svg[Tech Stack, 400, 300]
+image::tech-stack.svg[Tech Stack, 450, 450, align="center"]
 
 A typical request is handled like this:
 
-[plantuml, request-handling-pipeline, svg]
+[plantuml, request-handling-pipeline, format="svg", align="center"]
 ----
 @startuml
+
+scale 450x450
 
 title Request handling pipeline
 
@@ -67,9 +75,9 @@ end note
 
 <<<
 
-== Classes
+== Back end classes
 
-This sections describes how {app} is organized in terms of packages and classes. All classes are logically organized into packages:
+This sections describes how {app} is organized in terms of back end packages and classes. All classes are logically organized into packages:
 
 * Controllers - API endpoints implementation.
 * Services - business logic implementation.
@@ -108,7 +116,7 @@ include::{snippetsDir}/DocTest/documentClasses/repositories.adoc[]
 
 <<<
 
-== Transactions
+== Back end transactions
 
 This section describes {app}'s transactions.
 
@@ -146,30 +154,30 @@ include::{snippetsDir}/TransactionTest/documentGetNote/sequenceDiagram.puml[]
 include::{snippetsDir}/TransactionTest/documentGetAllNotes/sequenceDiagram.puml[]
 ----
 
-The end.
-
 <<<
 
-== Experimental
+== Front end classes
 
-=== Front end class diagram
+This sections describes how {app} is organized in terms of front end classes.
+
+=== Class diagram
 
 [plantuml, fe-class-diagram, svg]
 ----
 include::{snippetsDir}/FrontEndDocTest/documentClasses/classDiagram.puml[]
 ----
 
+Is it not a nice diagram?
+
 <<<
 
-=== Front end classes
+=== Classes
 
 include::{snippetsDir}/FrontEndDocTest/documentClasses/classes.adoc[]
 
 <<<
 
-=== Just a screenshot
-
-image::{snippetsDir}/ScreenshotTest/documentScreenshot/main.png[]
+== Workflows
 
 === Creating a note
 
@@ -189,6 +197,8 @@ Done.
 
 <<<
 
+== Front/Back end sequence diagrams
+
 === Loading notes
 
 The following describes how "load notes" transaction works on both back- and front-end.
@@ -198,4 +208,6 @@ The following describes how "load notes" transaction works on both back- and fro
 include::{snippetsDir}/AdvancedTransactionTest/describeLoadNotesTransaction/sequenceDiagram.puml[]
 ----
 
-End.
+See how front end initiates the transaction and back end provides the data to front end.
+
+The End.

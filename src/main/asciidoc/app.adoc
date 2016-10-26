@@ -177,9 +177,7 @@ include::{snippetsDir}/FrontEndDocTest/documentClasses/classes.adoc[]
 
 <<<
 
-== Workflows
-
-=== Creating a note
+== Workflow: Creating a note
 
 Making notes is crucial. Let's get started with an empty {app}, where there are no notes at all. See how empty it is. It is up to us to create the very first note.
 
@@ -209,5 +207,18 @@ include::{snippetsDir}/AdvancedTransactionTest/describeLoadNotesTransaction/sequ
 ----
 
 See how front end initiates the transaction and back end provides the data to front end.
+
+<<<
+
+=== Creating a note
+
+The following describes how "create note" transaction works on both back- and front-end.
+
+[plantuml, febe-create-note-diagram, svg]
+----
+include::{snippetsDir}/AdvancedTransactionTest/describeCreateNoteTransaction/sequenceDiagram.puml[]
+----
+
+See how front end initiates the transaction and back end actually creates the note.
 
 The End.

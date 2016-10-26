@@ -1,7 +1,9 @@
 package me.loki2302.app;
 
 import me.loki2302.documentation.SnippetWriter;
-import me.loki2302.spring.advanced.*;
+import me.loki2302.spring.advanced.AdvancedSequenceDiagramSnippet;
+import me.loki2302.spring.advanced.EnableTransactionLogging;
+import me.loki2302.spring.advanced.TransactionFrame;
 import me.loki2302.webdriver.FrontEndTransactionFacade;
 import me.loki2302.webdriver.WebDriverConfiguration;
 import org.junit.Rule;
@@ -18,10 +20,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -43,25 +41,9 @@ public class AdvancedTransactionTest {
 
     @Test
     public void describeLoadNotesTransaction() {
-        // no reset needed, since it's empty
-        // frontEndTransactionFacade.reset();
-
         webDriver.get("http://localhost:8080/");
 
-        List<TransactionEvent> transactionEvents = frontEndTransactionFacade.getTransactionEvents();
-
-        transactionEvents.forEach(transactionEvent -> {
-            LOGGER.info("TransactionEvent: {}", transactionEvent);
-        });
-
-        assertEquals(18, transactionEvents.size());
-
-        TransactionFrameBuilder transactionFrameBuilder = new TransactionFrameBuilder();
-        for(TransactionEvent transactionEvent : transactionEvents) {
-            transactionFrameBuilder.handleTransactionEvent(transactionEvent);
-        }
-
-        TransactionFrame rootTransactionFrame = transactionFrameBuilder.getRootTransactionFrame();
+        TransactionFrame rootTransactionFrame = frontEndTransactionFacade.getTransactionEvents();
         snippetWriter.write("sequenceDiagram.puml", new AdvancedSequenceDiagramSnippet(rootTransactionFrame));
     }
 
@@ -78,8 +60,8 @@ public class AdvancedTransactionTest {
 
         submitButtonElement.click();
 
-        List<TransactionEvent> transactionEvents = frontEndTransactionFacade.getTransactionEvents();
-        assertEquals(36, transactionEvents.size());
+        TransactionFrame rootTransactionFrame = frontEndTransactionFacade.getTransactionEvents();
+        snippetWriter.write("sequenceDiagram.puml", new AdvancedSequenceDiagramSnippet(rootTransactionFrame));
     }
 
     @Configuration

@@ -2,7 +2,7 @@ import {Http, Request, RequestOptionsArgs, Response} from "@angular/http";
 import {Injectable} from "@angular/core";
 import {Wove} from "aspect.js-angular";
 import {TransactionRecorder} from "./transaction-recorder";
-import {BETransactionRecord} from "./be-transaction-record";
+import {TransactionEvent} from "./transaction-event";
 
 /**
  * TODO: document this
@@ -64,8 +64,12 @@ export class HttpClient {
     }
 
     private _notifyTransactionRecorder(response: Response): void {
-        const transactionRecordsJson = response.headers.get("X-BackEnd-Transaction");
-        const beTransactionRecords: BETransactionRecord[] = <BETransactionRecord[]>JSON.parse(transactionRecordsJson);
-        this.transactionRecorder.handleBELog(beTransactionRecords);
+        const transactionEventsJson = response.headers.get("X-BackEnd-Transaction");
+        if(transactionEventsJson == null) {
+            return;
+        }
+
+        const transactionEvents: TransactionEvent[] = <TransactionEvent[]>JSON.parse(transactionEventsJson);
+        this.transactionRecorder.appendEvents(transactionEvents);
     }
 }

@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
-import {BETransactionRecord} from "./be-transaction-record";
+import {TransactionEvent, TransactionEventType} from "./transaction-event";
 
 @Injectable()
 export class TransactionRecorder {
-    private records: string[] = [];
+    private transactionEvents: TransactionEvent[] = [];
 
     constructor() {
         // TODO: is it reliable way to expose?
@@ -11,30 +11,49 @@ export class TransactionRecorder {
     }
 
     handleBefore(className: string, methodName: string): void {
-        const recordString: string = `FE BEFORE ${className}::${methodName}`;
-        console.log(recordString);
-        this.records.push(recordString);
+        const event: TransactionEvent = {
+            tag: "FE",
+            eventType: TransactionEventType.Enter,
+            className: className,
+            methodName: methodName
+        };
+        this.dumpEvent(event);
+        this.transactionEvents.push(event);
     }
 
     handleAfter(className: string, methodName: string): void {
-        const recordString: string = `FE AFTER ${className}::${methodName}`;
-        console.log(recordString);
-        this.records.push(recordString);
+        const event: TransactionEvent = {
+            tag: "FE",
+            eventType: TransactionEventType.Leave,
+            className: className,
+            methodName: methodName
+        };
+        this.dumpEvent(event);
+        this.transactionEvents.push(event);
     }
 
-    handleBELog(beTransactionRecords: BETransactionRecord[]): void {
-        for(const record of beTransactionRecords) {
-            const recordString: string = `BE ${record.comment} ${record.className}::${record.methodName}`;
-            console.log(record);
-            this.records.push(recordString);
-        };
+    appendEvents(events: TransactionEvent[]): void {
+        events.forEach((event) => {
+            this.dumpEvent(event);
+            this.transactionEvents.push(event);
+        });
+    }
+
+    private dumpEvent(event: TransactionEvent): void {
+        console.log(`${event.tag} ${event.eventType} ${event.className}::${event.methodName}`);
     }
 
     reset(): void {
-        this.records = [];
+        this.transactionEvents = [];
     }
 
-    getRecords(): string[] {
-        return this.records;
+    getTransactionEvents(): TransactionEvent[] {
+        return this.transactionEvents;
+    }
+
+    getTransactionEventsJson(): string {
+        return JSON.stringify({
+            events: this.transactionEvents
+        });
     }
 }

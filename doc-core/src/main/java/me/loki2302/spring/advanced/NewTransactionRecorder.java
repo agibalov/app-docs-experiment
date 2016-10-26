@@ -7,6 +7,8 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.util.ArrayList;
@@ -14,7 +16,9 @@ import java.util.List;
 
 @Aspect
 public class NewTransactionRecorder {
-    private List<TransactionRecord> transactionRecords;
+    private final static Logger LOGGER = LoggerFactory.getLogger(NewTransactionRecorder.class);
+
+    private List<TransactionEvent> transactionEvents;
 
     @Around("execution(public * org.springframework.data.repository.Repository+.*(..))")
     public Object traceSpringRepositoryAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -51,11 +55,11 @@ public class NewTransactionRecorder {
     }
 
     public void resetTransaction() {
-        transactionRecords = new ArrayList<>();
+        transactionEvents = new ArrayList<>();
     }
 
-    public List<TransactionRecord> getTransactionRecords() {
-        return transactionRecords;
+    public List<TransactionEvent> getTransactionEvents() {
+        return transactionEvents;
     }
 
     private Object handleTransaction(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -63,30 +67,34 @@ public class NewTransactionRecorder {
         String className = signature.getDeclaringType().getSimpleName();
         String methodName = signature.getName();
 
-        if(transactionRecords != null) {
-            transactionRecords.add(makeTransactionRecord("BEFORE", className, methodName));
+        if(transactionEvents != null) {
+            TransactionEvent transactionEvent = makeTransactionEvent("BE", TransactionEventType.Enter, className, methodName);
+            transactionEvents.add(transactionEvent);
+            LOGGER.info("tracing {}", transactionEvent);
         }
 
         Object result = proceedingJoinPoint.proceed();
 
-        if(transactionRecords != null) {
-            transactionRecords.add(makeTransactionRecord("AFTER", className, methodName));
+        if(transactionEvents != null) {
+            TransactionEvent transactionEvent = makeTransactionEvent("BE", TransactionEventType.Leave, className, methodName);
+            transactionEvents.add(transactionEvent);
+            LOGGER.info("tracing {}", transactionEvent);
         }
 
         return result;
     }
 
-    private static TransactionRecord makeTransactionRecord(String comment, String className, String methodName) {
-        TransactionRecord transactionRecord = new TransactionRecord();
-        transactionRecord.comment = comment;
-        transactionRecord.className = className;
-        transactionRecord.methodName = methodName;
-        return transactionRecord;
-    }
+    private static TransactionEvent makeTransactionEvent(
+            String tag,
+            TransactionEventType eventType,
+            String className,
+            String methodName) {
 
-    public static class TransactionRecord {
-        public String comment;
-        public String className;
-        public String methodName;
+        TransactionEvent transactionEvent = new TransactionEvent();
+        transactionEvent.tag = tag;
+        transactionEvent.eventType = eventType;
+        transactionEvent.className = className;
+        transactionEvent.methodName = methodName;
+        return transactionEvent;
     }
 }

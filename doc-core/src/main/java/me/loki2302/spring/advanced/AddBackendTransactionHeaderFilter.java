@@ -30,18 +30,24 @@ public class AddBackendTransactionHeaderFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
+        // TODO: replace with transaction IDs or make it track events in per-request scope
+        if(!request.getRequestURI().contains("/api/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         LOGGER.info("Resetting TX for {} {}", request.getMethod(), request.getRequestURI());
         newTransactionRecorder.resetTransaction();
 
         ContentCachingResponseWrapper contentCachingResponseWrapper = new ContentCachingResponseWrapper(response);
         filterChain.doFilter(request, contentCachingResponseWrapper);
 
-        List<NewTransactionRecorder.TransactionRecord> transactionRecords =
-                newTransactionRecorder.getTransactionRecords();
+        List<TransactionEvent> transactionEvents =
+                newTransactionRecorder.getTransactionEvents();
 
         String transactionLogJson;
         try {
-            transactionLogJson = objectMapper.writeValueAsString(transactionRecords);
+            transactionLogJson = objectMapper.writeValueAsString(transactionEvents);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

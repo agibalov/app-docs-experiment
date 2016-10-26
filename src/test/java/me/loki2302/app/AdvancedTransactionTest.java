@@ -1,7 +1,7 @@
 package me.loki2302.app;
 
 import me.loki2302.documentation.SnippetWriter;
-import me.loki2302.spring.advanced.EnableTransactionLogging;
+import me.loki2302.spring.advanced.*;
 import me.loki2302.webdriver.FrontEndTransactionFacade;
 import me.loki2302.webdriver.WebDriverConfiguration;
 import org.junit.Rule;
@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +30,10 @@ import static org.junit.Assert.assertEquals;
 }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class AdvancedTransactionTest {
+    private final static Logger LOGGER = LoggerFactory.getLogger(AdvancedTransactionTest.class);
+
     @Rule
-    public SnippetWriter screenshotWriter = new SnippetWriter(System.getProperty("snippetsDir"));
+    public SnippetWriter snippetWriter = new SnippetWriter(System.getProperty("snippetsDir"));
 
     @Autowired
     private WebDriver webDriver;
@@ -38,14 +42,27 @@ public class AdvancedTransactionTest {
     private FrontEndTransactionFacade frontEndTransactionFacade;
 
     @Test
-    public void describeLoadNotesTransactions() {
+    public void describeLoadNotesTransaction() {
         // no reset needed, since it's empty
         // frontEndTransactionFacade.reset();
 
         webDriver.get("http://localhost:8080/");
 
-        List<String> records = frontEndTransactionFacade.getRecords();
-        assertEquals(15, records.size());
+        List<TransactionEvent> transactionEvents = frontEndTransactionFacade.getTransactionEvents();
+
+        transactionEvents.forEach(transactionEvent -> {
+            LOGGER.info("TransactionEvent: {}", transactionEvent);
+        });
+
+        assertEquals(18, transactionEvents.size());
+
+        TransactionFrameBuilder transactionFrameBuilder = new TransactionFrameBuilder();
+        for(TransactionEvent transactionEvent : transactionEvents) {
+            transactionFrameBuilder.handleTransactionEvent(transactionEvent);
+        }
+
+        TransactionFrame rootTransactionFrame = transactionFrameBuilder.getRootTransactionFrame();
+        snippetWriter.write("sequenceDiagram.puml", new AdvancedSequenceDiagramSnippet(rootTransactionFrame));
     }
 
     @Test
@@ -61,8 +78,8 @@ public class AdvancedTransactionTest {
 
         submitButtonElement.click();
 
-        List<String> records = frontEndTransactionFacade.getRecords();
-        assertEquals(36, records.size());
+        List<TransactionEvent> transactionEvents = frontEndTransactionFacade.getTransactionEvents();
+        assertEquals(36, transactionEvents.size());
     }
 
     @Configuration

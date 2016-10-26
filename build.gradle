@@ -46,7 +46,6 @@ dependencies {
     checkstyle group: 'com.puppycrawl.tools', name: 'checkstyle', version: '7.1.1'
     checkstyle project(':doc-core')
     compile project(':doc-core-api')
-    compile project(':doc-core') // TODO: remove it, it's just for debugging
     compile project(':front-end')
 }
 

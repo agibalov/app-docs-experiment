@@ -186,3 +186,16 @@ After it, we click the "Create" button. And once we do that, a new note should a
 image::{snippetsDir}/ScreenshotTest/documentCreateNoteScenario/3.png[]
 
 Done.
+
+<<<
+
+=== Loading notes
+
+The following describes how "load notes" transaction works on both back- and front-end.
+
+[plantuml, febe-load-notes-diagram, svg]
+----
+include::{snippetsDir}/AdvancedTransactionTest/describeLoadNotesTransaction/sequenceDiagram.puml[]
+----
+
+End.

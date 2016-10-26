@@ -28,5 +28,7 @@ dependencies {
     compile 'org.seleniumhq.selenium:selenium-java:2.53.1'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:2.53.1'
 
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+
     compile project(':doc-core-api')
 }

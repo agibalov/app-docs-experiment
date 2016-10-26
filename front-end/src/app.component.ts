@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
     async ngOnInit(): Promise<void> {
         const noteDtos: NoteWithIdDto[] = await this.apiClient.getNotes();
         this.notes = noteDtos.map((noteDto) => {
-            return this.noteFromNoteWithIdDto(noteDto);
+            return this._noteFromNoteWithIdDto(noteDto);
         })
     }
 
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
         };
 
         const createdNoteDto: NoteWithIdDto = await this.apiClient.createNote(noteDto);
-        const note: Note = this.noteFromNoteWithIdDto(createdNoteDto);
+        const note: Note = this._noteFromNoteWithIdDto(createdNoteDto);
         this.notes.push(note);
     }
 
@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
                 return note;
             }
 
-            return this.noteFromNoteWithIdDto(actualUpdatedNoteDto);
+            return this._noteFromNoteWithIdDto(actualUpdatedNoteDto);
         });
     }
 
@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
      * @param noteWithIdDto a note data transfer object
      * @returns {{id: number, text: string}} a constructed note
      */
-    private noteFromNoteWithIdDto(noteWithIdDto: NoteWithIdDto): Note {
+    private _noteFromNoteWithIdDto(noteWithIdDto: NoteWithIdDto): Note {
         return {
             id: noteWithIdDto.id,
             text: noteWithIdDto.text

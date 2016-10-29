@@ -3,6 +3,8 @@ package me.loki2302.app;
 import me.loki2302.app.services.NoteService;
 import me.loki2302.documentation.SnippetWriter;
 import me.loki2302.documentation.snippets.FileSnippet;
+import me.loki2302.documentation.snippets.TextSnippet;
+import me.loki2302.testing.TestComment;
 import me.loki2302.webdriver.WebDriverConfiguration;
 import me.loki2302.webdriver.WebDriverUtils;
 import org.junit.Rule;
@@ -28,6 +30,9 @@ public class ScreenshotTest {
     @Rule
     public SnippetWriter snippetWriter = new SnippetWriter(System.getProperty("snippetsDir"));
 
+    @Rule
+    public TestComment testComment = new TestComment("src/test/java");
+
     @Autowired
     private WebDriver webDriver;
 
@@ -49,9 +54,8 @@ public class ScreenshotTest {
         snippetWriter.write("main.png", new FileSnippet(webDriverUtils.makeScreenshot()));
     }
 
-    // TODO: consider using Javadoc to describe the scenario. Example:
     /**
-     * === Creating a note
+     * == Workflow: Creating a note
      *
      * Making notes is crucial. Let's get started with an empty {app}, where there are no notes at all.
      * See how empty it is. It is up to us to create the very first note.
@@ -62,8 +66,7 @@ public class ScreenshotTest {
      *
      * image::{snippetsDir}/ScreenshotTest/documentCreateNoteScenario/2.png[]
      *
-     * After it, we click the "Create" button. And once we do that, a new note should appear on the
-     * list of note:
+     * After it, we click the "Create" button. And once we do that, a new note should appear on the list of notes:
      *
      * image::{snippetsDir}/ScreenshotTest/documentCreateNoteScenario/3.png[]
      *
@@ -81,6 +84,9 @@ public class ScreenshotTest {
         WebElement submitButtonElement = webDriver.findElement(By.cssSelector("button[type=\"submit\"]"));
         submitButtonElement.click();
         snippetWriter.write("3.png", new FileSnippet(webDriverUtils.makeScreenshot()));
+
+        String comment = testComment.getComment();
+        snippetWriter.write("index.adoc", new TextSnippet(comment));
     }
 
     @Configuration

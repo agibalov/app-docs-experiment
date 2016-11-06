@@ -1,4 +1,4 @@
-package me.loki2302.spring.advanced;
+package me.loki2302.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,7 +22,7 @@ public class AddBackendTransactionHeaderFilter extends OncePerRequestFilter {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private NewTransactionRecorder newTransactionRecorder;
+    private TransactionRecorder transactionRecorder;
 
     @Override
     protected void doFilterInternal(
@@ -37,13 +37,13 @@ public class AddBackendTransactionHeaderFilter extends OncePerRequestFilter {
         }
 
         LOGGER.info("Resetting TX for {} {}", request.getMethod(), request.getRequestURI());
-        newTransactionRecorder.resetTransaction();
+        transactionRecorder.resetTransaction();
 
         ContentCachingResponseWrapper contentCachingResponseWrapper = new ContentCachingResponseWrapper(response);
         filterChain.doFilter(request, contentCachingResponseWrapper);
 
         List<TransactionEvent> transactionEvents =
-                newTransactionRecorder.getTransactionEvents();
+                transactionRecorder.getTransactionEvents();
 
         String transactionLogJson;
         try {

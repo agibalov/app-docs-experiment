@@ -5,51 +5,18 @@ import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 @Aspect
 public class TransactionRecorder {
-    private boolean isRecording;
-    private TxInfo rootTxInfo;
-    private Stack<TxInfo> txStack;
+    private final static Logger LOGGER = LoggerFactory.getLogger(TransactionRecorder.class);
 
-    public void startTransaction() {
-        isRecording = true;
-    }
-
-    public void stopTransaction() {
-        isRecording = false;
-    }
-
-    public TransactionScript getTransactionScript() {
-        List<String> steps = traverse(rootTxInfo);
-        TransactionScript transactionScript = new TransactionScript(rootTxInfo.comment, steps);
-        return transactionScript;
-    }
-
-    private static List<String> traverse(TxInfo txInfo) {
-        List<String> steps = new ArrayList<>();
-
-        if(txInfo.components.isEmpty()) {
-            return steps;
-        }
-
-        for(TxInfo child : txInfo.components) {
-            List<String> childSteps = traverse(child);
-
-            steps.add(String.format("group %s", child.comment));
-            steps.add(String.format("%s -> %s : %s::%s", txInfo.className, child.className, child.className, child.methodName));
-            steps.addAll(childSteps);
-            steps.add(String.format("%s <-- %s : %s::%s", txInfo.className, child.className, child.className, child.methodName));
-            steps.add(String.format("end"));
-        }
-
-        return steps;
-    }
+    private List<TransactionEvent> transactionEvents;
 
     @Around("execution(public * org.springframework.data.repository.Repository+.*(..))")
     public Object traceSpringRepositoryAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -57,75 +24,71 @@ public class TransactionRecorder {
         if(signature instanceof MethodSignature) {
             MethodSignature methodSignature = (MethodSignature)signature;
 
-            TransactionEntryPoint transactionEntryPoint = AnnotationUtils.getAnnotation(
-                    methodSignature.getMethod(),
-                    TransactionEntryPoint.class);
-            if(transactionEntryPoint != null) {
-                return handleTransaction(proceedingJoinPoint);
-            }
-
             TransactionComponent transactionComponent = AnnotationUtils.getAnnotation(
                     methodSignature.getMethod(),
                     TransactionComponent.class);
             if(transactionComponent != null) {
-                return handleTransactionComponent(proceedingJoinPoint);
+                return handleTransaction(proceedingJoinPoint, transactionComponent.value());
             }
         }
 
         return proceedingJoinPoint.proceed();
     }
 
-    @Around("execution(@TransactionEntryPoint * *.*(..))")
-    public Object traceTransactionEntryPointAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        return handleTransaction(proceedingJoinPoint);
-    }
-
-    @Around("execution(@TransactionComponent * *.*(..))")
+    @Around("execution(@me.loki2302.spring.TransactionComponent * *.*(..))")
     public Object traceTransactionComponentAccess(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        return handleTransactionComponent(proceedingJoinPoint);
+        Signature signature = proceedingJoinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature)signature;
+        TransactionComponent transactionComponent = AnnotationUtils.getAnnotation(
+                methodSignature.getMethod(),
+                TransactionComponent.class);
+
+        return handleTransaction(proceedingJoinPoint, transactionComponent.value());
     }
 
-    private Object handleTransaction(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        if(isRecording) {
-            MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+    public void resetTransaction() {
+        transactionEvents = new ArrayList<>();
+    }
 
-            rootTxInfo = new TxInfo(
-                    proceedingJoinPoint.getSignature().getDeclaringType().getSimpleName(),
-                    proceedingJoinPoint.getSignature().getName(),
-                    methodSignature.getMethod().getAnnotation(TransactionEntryPoint.class).value());
-            txStack = new Stack<>();
-            txStack.push(rootTxInfo);
+    public List<TransactionEvent> getTransactionEvents() {
+        return transactionEvents;
+    }
+
+    private Object handleTransaction(ProceedingJoinPoint proceedingJoinPoint, String comment) throws Throwable {
+        Signature signature = proceedingJoinPoint.getSignature();
+        String className = signature.getDeclaringType().getSimpleName();
+        String methodName = signature.getName();
+
+        if(transactionEvents != null) {
+            TransactionEvent transactionEvent = makeTransactionEvent("BE", comment, TransactionEventType.Enter, className, methodName);
+            transactionEvents.add(transactionEvent);
+            LOGGER.info("tracing {}", transactionEvent);
         }
 
         Object result = proceedingJoinPoint.proceed();
 
-        if(isRecording) {
-            txStack.pop();
-            txStack = null;
+        if(transactionEvents != null) {
+            TransactionEvent transactionEvent = makeTransactionEvent("BE", comment, TransactionEventType.Leave, className, methodName);
+            transactionEvents.add(transactionEvent);
+            LOGGER.info("tracing {}", transactionEvent);
         }
 
         return result;
     }
 
-    private Object handleTransactionComponent(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        if(isRecording) {
-            MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+    private static TransactionEvent makeTransactionEvent(
+            String tag,
+            String comment,
+            TransactionEventType eventType,
+            String className,
+            String methodName) {
 
-            TxInfo txInfo = new TxInfo(
-                    proceedingJoinPoint.getSignature().getDeclaringType().getSimpleName(),
-                    proceedingJoinPoint.getSignature().getName(),
-                    methodSignature.getMethod().getAnnotation(TransactionComponent.class).value());
-
-            txStack.peek().components.add(txInfo);
-            txStack.push(txInfo);
-        }
-
-        Object result = proceedingJoinPoint.proceed();
-
-        if(isRecording) {
-            txStack.pop();
-        }
-
-        return result;
+        TransactionEvent transactionEvent = new TransactionEvent();
+        transactionEvent.tag = tag;
+        transactionEvent.comment = comment;
+        transactionEvent.eventType = eventType;
+        transactionEvent.className = className;
+        transactionEvent.methodName = methodName;
+        return transactionEvent;
     }
 }

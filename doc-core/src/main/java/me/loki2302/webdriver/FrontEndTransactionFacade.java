@@ -1,10 +1,8 @@
 package me.loki2302.webdriver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.loki2302.spring.advanced.TransactionEvent;
-import me.loki2302.spring.advanced.TransactionEventCollectionWrapper;
-import me.loki2302.spring.advanced.TransactionFrame;
-import me.loki2302.spring.advanced.TransactionFrameBuilder;
+import me.loki2302.spring.TransactionEvent;
+import me.loki2302.spring.TransactionEventCollectionWrapper;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -12,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.List;
 
 public class FrontEndTransactionFacade {
     private final static Logger LOGGER = LoggerFactory.getLogger(FrontEndTransactionFacade.class);
@@ -26,7 +25,7 @@ public class FrontEndTransactionFacade {
         ((JavascriptExecutor)webDriver).executeScript("window.transactionRecorder.reset()");
     }
 
-    public TransactionFrame getTransactionEvents() {
+    public List<TransactionEvent> getTransactionEvents() {
         String transactionEventsJson = (String)((JavascriptExecutor)webDriver)
                 .executeScript("return window.transactionRecorder.getTransactionEventsJson()");
         LOGGER.info("Retrieved {}", transactionEventsJson);
@@ -42,11 +41,6 @@ public class FrontEndTransactionFacade {
 
         LOGGER.info("Read as {} events", transactionEventCollectionWrapper.events.size());
 
-        TransactionFrameBuilder transactionFrameBuilder = new TransactionFrameBuilder();
-        for(TransactionEvent transactionEvent : transactionEventCollectionWrapper.events) {
-            transactionFrameBuilder.handleTransactionEvent(transactionEvent);
-        }
-
-        return transactionFrameBuilder.getRootTransactionFrame();
+        return transactionEventCollectionWrapper.events;
     }
 }

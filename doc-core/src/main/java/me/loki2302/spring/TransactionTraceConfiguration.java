@@ -6,7 +6,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class TransactionTraceConfiguration {
     @Bean
-    public TransactionRecorder transactionTraceAspect() {
+    public TransactionRecorder newTransactionRecorder() {
         return new TransactionRecorder();
+    }
+
+    @Bean
+    public AddBackendTransactionHeaderFilter addBackendTransactionHeaderFilter() {
+        return new AddBackendTransactionHeaderFilter();
     }
 }

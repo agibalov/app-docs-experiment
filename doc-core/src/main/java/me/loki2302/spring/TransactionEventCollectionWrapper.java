@@ -1,4 +1,4 @@
-package me.loki2302.spring.advanced;
+package me.loki2302.spring;
 
 import java.util.List;
 

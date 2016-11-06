@@ -1,9 +1,7 @@
 package me.loki2302.app;
 
 import me.loki2302.documentation.SnippetWriter;
-import me.loki2302.spring.advanced.AdvancedSequenceDiagramSnippet;
-import me.loki2302.spring.advanced.EnableTransactionLogging;
-import me.loki2302.spring.advanced.TransactionFrame;
+import me.loki2302.spring.*;
 import me.loki2302.webdriver.FrontEndTransactionFacade;
 import me.loki2302.webdriver.WebDriverConfiguration;
 import org.junit.Rule;
@@ -21,14 +19,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
         App.class,
-        AdvancedTransactionTest.Config.class
+        FrontEndBackEndTransactionTest.Config.class
 }, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class AdvancedTransactionTest {
-    private final static Logger LOGGER = LoggerFactory.getLogger(AdvancedTransactionTest.class);
+public class FrontEndBackEndTransactionTest {
+    private final static Logger LOGGER = LoggerFactory.getLogger(FrontEndBackEndTransactionTest.class);
 
     @Rule
     public SnippetWriter snippetWriter = new SnippetWriter(System.getProperty("snippetsDir"));
@@ -43,8 +43,9 @@ public class AdvancedTransactionTest {
     public void describeLoadNotesTransaction() {
         webDriver.get("http://localhost:8080/");
 
-        TransactionFrame rootTransactionFrame = frontEndTransactionFacade.getTransactionEvents();
-        snippetWriter.write("sequenceDiagram.puml", new AdvancedSequenceDiagramSnippet(rootTransactionFrame));
+        List<TransactionEvent> transactionEvents = frontEndTransactionFacade.getTransactionEvents();
+        TransactionFrame rootTransactionFrame = TransactionFrameBuilder.build(transactionEvents);
+        snippetWriter.write("sequenceDiagram.puml", new SequenceDiagramSnippet(rootTransactionFrame));
     }
 
     @Test
@@ -60,12 +61,13 @@ public class AdvancedTransactionTest {
 
         submitButtonElement.click();
 
-        TransactionFrame rootTransactionFrame = frontEndTransactionFacade.getTransactionEvents();
-        snippetWriter.write("sequenceDiagram.puml", new AdvancedSequenceDiagramSnippet(rootTransactionFrame));
+        List<TransactionEvent> transactionEvents = frontEndTransactionFacade.getTransactionEvents();
+        TransactionFrame rootTransactionFrame = TransactionFrameBuilder.build(transactionEvents);
+        snippetWriter.write("sequenceDiagram.puml", new SequenceDiagramSnippet(rootTransactionFrame));
     }
 
     @Configuration
-    @EnableTransactionLogging
+    @EnableTransactionTracing
     @Import(WebDriverConfiguration.class)
     public static class Config {
     }

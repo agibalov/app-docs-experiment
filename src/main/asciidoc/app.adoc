@@ -189,7 +189,7 @@ The following describes how "load notes" transaction works on both back- and fro
 
 [plantuml, febe-load-notes-diagram, svg]
 ----
-include::{snippetsDir}/AdvancedTransactionTest/describeLoadNotesTransaction/sequenceDiagram.puml[]
+include::{snippetsDir}/FrontEndBackEndTransactionTest/describeLoadNotesTransaction/sequenceDiagram.puml[]
 ----
 
 See how front end initiates the transaction and back end provides the data to front end.
@@ -202,7 +202,7 @@ The following describes how "create note" transaction works on both back- and fr
 
 [plantuml, febe-create-note-diagram, svg]
 ----
-include::{snippetsDir}/AdvancedTransactionTest/describeCreateNoteTransaction/sequenceDiagram.puml[]
+include::{snippetsDir}/FrontEndBackEndTransactionTest/describeCreateNoteTransaction/sequenceDiagram.puml[]
 ----
 
 See how front end initiates the transaction and back end actually creates the note.

@@ -7,7 +7,7 @@ import me.loki2302.app.persistence.UserActivityEvent;
 import me.loki2302.app. services.NoteService;
 import me.loki2302.app.services.UserActivityEventFactory;
 import me.loki2302.app.services.UserActivityEventService;
-import me.loki2302.spring.TransactionEntryPoint;
+import me.loki2302.spring.TransactionComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +42,7 @@ public class NoteController {
      * @param noteDto an object containing note attributes
      * @return a 201 response with Location header
      */
-    @TransactionEntryPoint("Create a note")
+    @TransactionComponent("Create a note")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity createNote(@RequestBody NoteDto noteDto) {
         long noteId = noteService.createNote(noteDto.text);
@@ -60,7 +60,7 @@ public class NoteController {
      * @param noteId a note ID
      * @return a 200 response with note attributes
      */
-    @TransactionEntryPoint("Get a note")
+    @TransactionComponent("Get a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.GET)
     public ResponseEntity getNote(@PathVariable long noteId) {
         Note note = noteService.getNote(noteId);
@@ -80,7 +80,7 @@ public class NoteController {
      *
      * @return a collection of all notes
      */
-    @TransactionEntryPoint("Get all notes")
+    @TransactionComponent("Get all notes")
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity getNotes() {
         List<Note> notes = noteService.getNotes();
@@ -101,7 +101,7 @@ public class NoteController {
      * @param noteDto an object containing note attributes
      * @return a 204 response
      */
-    @TransactionEntryPoint("Update a note")
+    @TransactionComponent("Update a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.PUT)
     public ResponseEntity updateNote(@PathVariable long noteId, @RequestBody NoteDto noteDto) {
         Note note = noteService.updateNote(noteId, noteDto.text);
@@ -121,7 +121,7 @@ public class NoteController {
      * @param noteId a note ID
      * @return a 204 response
      */
-    @TransactionEntryPoint("Delete a note")
+    @TransactionComponent("Delete a note")
     @RequestMapping(value = "{noteId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteNote(@PathVariable long noteId) {
         noteService.deleteNote(noteId);

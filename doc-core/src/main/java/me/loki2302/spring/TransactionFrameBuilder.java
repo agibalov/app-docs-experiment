@@ -1,9 +1,20 @@
-package me.loki2302.spring.advanced;
+package me.loki2302.spring;
 
+import java.util.List;
 import java.util.Stack;
 
 public class TransactionFrameBuilder {
     private Transaction transaction;
+
+    public static TransactionFrame build(List<TransactionEvent> transactionEvents) {
+        TransactionFrameBuilder transactionFrameBuilder = new TransactionFrameBuilder();
+        for(TransactionEvent transactionEvent : transactionEvents) {
+            transactionFrameBuilder.handleTransactionEvent(transactionEvent);
+        }
+
+        TransactionFrame rootTransactionFrame = transactionFrameBuilder.getRootTransactionFrame();
+        return rootTransactionFrame;
+    }
 
     public void handleTransactionEvent(TransactionEvent transactionEvent) {
         if(transactionEvent.eventType.equals(TransactionEventType.Enter)) {
@@ -18,6 +29,7 @@ public class TransactionFrameBuilder {
     private void enter(TransactionEvent transactionEvent) {
         TransactionFrame transactionFrame = new TransactionFrame(
                 transactionEvent.tag,
+                transactionEvent.comment,
                 transactionEvent.className,
                 transactionEvent.methodName);
 

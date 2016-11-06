@@ -13,6 +13,7 @@ export class TransactionRecorder {
     handleBefore(className: string, methodName: string): void {
         const event: TransactionEvent = {
             tag: "FE",
+            comment: '',
             eventType: TransactionEventType.Enter,
             className: className,
             methodName: methodName
@@ -24,6 +25,7 @@ export class TransactionRecorder {
     handleAfter(className: string, methodName: string): void {
         const event: TransactionEvent = {
             tag: "FE",
+            comment: '',
             eventType: TransactionEventType.Leave,
             className: className,
             methodName: methodName

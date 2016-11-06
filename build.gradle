@@ -56,7 +56,6 @@ ext {
 test {
     systemProperty 'snippetsDir', snippetsDir
     systemProperty 'classpath', configurations.runtime.join(',')
-    systemProperty 'webdriver.chrome.driver', 'node_modules/chromedriver/bin/chromedriver'
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
     dependsOn checkstyleMain

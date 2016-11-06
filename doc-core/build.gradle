@@ -25,6 +25,7 @@ dependencies {
     compile 'org.glassfish.web:javax.el:2.2.4'
     compile 'fr.inria.gforge.spoon:spoon-core:5.3.0'
 
+    compile 'io.github.bonigarcia:webdrivermanager:1.4.10'
     compile 'org.seleniumhq.selenium:selenium-java:2.53.1'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:2.53.1'
 

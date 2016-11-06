@@ -16,7 +16,7 @@ public class SynchronizingWebDriverEventListener implements WebDriverEventListen
 
     @Override
     public void afterNavigateTo(String url, WebDriver driver) {
-        angular2Synchronizer.synchronizeAngular2Smart(driver);
+        angular2Synchronizer.synchronize(driver);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SynchronizingWebDriverEventListener implements WebDriverEventListen
 
     @Override
     public void afterClickOn(WebElement element, WebDriver driver) {
-        angular2Synchronizer.synchronizeAngular2Smart(driver);
+        angular2Synchronizer.synchronize(driver);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SynchronizingWebDriverEventListener implements WebDriverEventListen
 
     @Override
     public void afterChangeValueOf(WebElement element, WebDriver driver) {
-        angular2Synchronizer.synchronizeAngular2Smart(driver);
+        angular2Synchronizer.synchronize(driver);
     }
 
     @Override

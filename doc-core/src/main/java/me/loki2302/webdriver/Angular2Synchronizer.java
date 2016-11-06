@@ -18,12 +18,7 @@ public class Angular2Synchronizer {
     @Value("classpath:/angular2-sync.js")
     private Resource angular2SyncScript;
 
-    public void synchronizeAngular2(WebDriver webDriver) {
-        String scriptContent = readResource(angular2SyncScript);
-        ((JavascriptExecutor)webDriver).executeAsyncScript(scriptContent);
-    }
-
-    public void synchronizeAngular2Smart(WebDriver webDriver) {
+    public void synchronize(WebDriver webDriver) {
         String scriptContent = readResource(angular2SyncScript);
 
         for(int i = 0; i < MAX_ANGULAR2_SYNC_ITERATIONS; ++i) {

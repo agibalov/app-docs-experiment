@@ -54,11 +54,22 @@ ext {
 }
 
 test {
+    exclude 'me/loki2302/app/finalizing/**'
     systemProperty 'snippetsDir', snippetsDir
     systemProperty 'classpath', configurations.runtime.join(',')
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
     dependsOn checkstyleMain
+}
+
+task finalTest(type: Test) {
+    useJUnit()
+    include 'me/loki2302/app/finalizing/**'
+    systemProperty 'snippetsDir', snippetsDir
+    systemProperty 'classpath', configurations.runtime.join(',')
+    testLogging.showStandardStreams = true
+    outputs.dir snippetsDir
+    dependsOn test
 }
 
 asciidoctor {
@@ -78,7 +89,7 @@ asciidoctor {
     backends 'html5'
     requires = ['asciidoctor-diagram']
     gemPath = jrubyPrepare.outputDir
-    dependsOn jrubyPrepare, test
+    dependsOn jrubyPrepare, finalTest
 }
 
 checkstyle {

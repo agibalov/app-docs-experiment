@@ -1,24 +1,19 @@
 package me.loki2302.app;
 
-import me.loki2302.app.dtos.AboutApiDto;
+import me.loki2302.documentation.SnippetWriter;
+import me.loki2302.documentation.snippets.TextSnippet;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Date;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DummyTest {
+    @Rule
+    public final SnippetWriter snippetWriter = new SnippetWriter(System.getProperty("snippetsDir"));
+
     @Test
-    public void itShouldWorkSomehow() {
-        RestTemplate restTemplate = new RestTemplate();
-        AboutApiDto aboutApiDto = restTemplate.getForObject("http://localhost:8080/api/about", AboutApiDto.class);
-        assertEquals("1.0", aboutApiDto.version);
-        assertEquals("Some very useful description", aboutApiDto.description);
+    public void dummy() {
+        String message = String.format("I am DummyTest! %s", new Date());
+        snippetWriter.write("dummy.txt", new TextSnippet(message));
     }
 }

@@ -10,8 +10,10 @@
     "moduleResolution": "node",
     "types": ["node", "glob"]
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "node_modules"
-  ],
-  "files": []
+  ]
 }

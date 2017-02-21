@@ -57,6 +57,7 @@ test {
     exclude 'me/loki2302/app/finalizing/**'
     systemProperty 'snippetsDir', snippetsDir
     systemProperty 'classpath', configurations.runtime.join(',')
+    systemProperty 'java.awt.headless', 'false' // only needed for AWT screenshots
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
     dependsOn checkstyleMain

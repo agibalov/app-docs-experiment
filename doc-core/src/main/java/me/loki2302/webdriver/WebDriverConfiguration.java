@@ -43,6 +43,18 @@ public class WebDriverConfiguration {
     }
 
     @Bean
+    public ScreenshotStrategy screenshotStrategy() {
+        /**
+         * As of Chrome 56.0.2924.87 and ChromeDriver 2.27,
+         * native screenshots do not work - they are always black images.
+         * Probably here's this issue: https://bugs.chromium.org/p/chromedriver/issues/detail?id=1625
+         * The only reliable workaround is to use AWT screenshots
+         */
+        //return new WebDriverScreenshotStrategy();
+        return new AwtScreenshotStrategy();
+    }
+
+    @Bean
     public Angular2Synchronizer angular2Synchronizer() {
         return new Angular2Synchronizer();
     }

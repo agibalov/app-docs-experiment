@@ -8,12 +8,12 @@ import me.loki2302.documentation.responses.PlainTextSnippetResponse;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -82,32 +82,24 @@ public class SnippetWriter implements TestRule {
                 LOGGER.info("templateName={}, model={}", templateName, model);
 
                 String templateString = Resources.toString(Resources.getResource(templateName), Charsets.UTF_8);
-                String ejsString = Resources.toString(
-                        Resources.getResource("META-INF/resources/webjars/ejs/2.4.1/ejs-v2.4.1/ejs.js"),
-                        Charsets.UTF_8);
-                Context context = Context.enter();
+
+                ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+                ScriptEngine engine = scriptEngineManager.getEngineByName("nashorn");
+                engine.put("template", templateString);
+                engine.put("model", model);
+
+                String content;
                 try {
-                    Scriptable scope = context.initStandardObjects();
-
-                    ScriptableObject.putProperty(scope, "template", templateString);
-
-                    Object modelObj = Context.javaToJS(model, scope);
-                    ScriptableObject.putProperty(scope, "model", modelObj);
-
-                    context.evaluateString(scope, "window = {}", "browser.js", 1, null);
-                    context.evaluateString(scope, ejsString, "ejs.js", 1, null);
-
-                    String content = (String)context.evaluateString(
-                            scope,
-                            "window.ejs.render(template, { model: model })",
-                            "renderer.js",
-                            1,
-                            null);
-
-                    Files.write(path, Collections.singleton(content));
-                } finally {
-                    context.exit();
+                    engine.eval("var modelProxy = Object.bindProperties({}, model)");
+                    engine.eval("window = {}");
+                    engine.eval("load('classpath:" +
+                            "META-INF/resources/webjars/ejs/2.4.1/ejs-v2.4.1/ejs.js')");
+                    content = (String)engine.eval("window.ejs.render(template, { model: modelProxy })");
+                } catch (ScriptException e) {
+                    throw new RuntimeException(e);
                 }
+
+                Files.write(path, Collections.singleton(content));
             } else {
                 throw new RuntimeException("Don't know how to handle " +
                         SnippetResponse.class.getSimpleName() +

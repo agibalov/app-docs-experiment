@@ -23,7 +23,6 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
     private final static Logger LOGGER = LoggerFactory.getLogger(JavadocCommentCheck.class);
 
     private File sourceRoot;
-    private String[] classpath;
     private CodebaseModel codebaseModel;
 
     public void setSourceRoot(File sourceRoot) {
@@ -32,22 +31,14 @@ public class JavadocCommentCheck extends AbstractFileSetCheck {
         }
     }
 
-    public void setClasspath(String... classpath) {
-        this.classpath = classpath;
-    }
-
     @Override
     public void beginProcessing(String charset) {
-        LOGGER.info("Got {} items on classpath", classpath.length);
-        Arrays.stream(classpath).forEach(cp -> LOGGER.info("{}", cp));
-
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         CodeReader codeReader = new CodeReader(validator);
         CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
         CodebaseModelBuilder codebaseModelBuilder = new CodebaseModelBuilder(
                 codeReader,
-                codebaseModelGraphFacade,
-                classpath);
+                codebaseModelGraphFacade);
 
         codebaseModel = codebaseModelBuilder.buildCodebaseModel(sourceRoot);
 

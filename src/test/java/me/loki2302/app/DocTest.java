@@ -27,8 +27,7 @@ public class DocTest {
         CodebaseModelGraphFacade codebaseModelGraphFacade = new CodebaseModelGraphFacade();
         CodebaseModelBuilder codebaseModelBuilder = new CodebaseModelBuilder(
                 codeReader,
-                codebaseModelGraphFacade,
-                System.getProperty("classpath").split(","));
+                codebaseModelGraphFacade);
         CodebaseModel codebaseModel = codebaseModelBuilder.buildCodebaseModel(new File("./src/main/java"));
 
         List<ClassModel> controllerClasses = codebaseModel.findClassesByStereotype("controller");

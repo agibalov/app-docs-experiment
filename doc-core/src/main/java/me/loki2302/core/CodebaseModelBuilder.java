@@ -7,8 +7,6 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spoon.Launcher;
-import spoon.SpoonAPI;
 
 import java.io.File;
 import java.util.List;
@@ -19,31 +17,23 @@ public class CodebaseModelBuilder {
 
     private final CodeReader codeReader;
     private final CodebaseModelGraphFacade codebaseModelGraphFacade;
-    private final String[] classpath;
 
     public CodebaseModelBuilder(
             CodeReader codeReader,
-            CodebaseModelGraphFacade codebaseModelGraphFacade,
-            String[] classpath) {
+            CodebaseModelGraphFacade codebaseModelGraphFacade) {
 
         this.codeReader = codeReader;
         this.codebaseModelGraphFacade = codebaseModelGraphFacade;
-        this.classpath = classpath;
     }
 
     public CodebaseModel buildCodebaseModel(File sourceRoot) {
         JavaProjectBuilder javaProjectBuilder = new JavaProjectBuilder();
         javaProjectBuilder.addSourceTree(sourceRoot);
 
-        SpoonAPI spoonAPI = new Launcher();
-        spoonAPI.getEnvironment().setSourceClasspath(classpath);
-        spoonAPI.addInputResource(sourceRoot.getAbsolutePath());
-        spoonAPI.buildModel();
-
         List<ClassModel> classModels = javaProjectBuilder
                 .getClasses()
                 .stream()
-                .map(clazz -> codeReader.readClass(clazz, spoonAPI))
+                .map(clazz -> codeReader.readClass(clazz))
                 .filter(classModel -> classModel.isDocumented)
                 .collect(Collectors.toList());
 

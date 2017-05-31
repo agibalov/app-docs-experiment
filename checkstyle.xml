@@ -7,6 +7,5 @@
         <property name="fileExtensions" value="java" />
         <property name="sourceRoot" value="src/main/java" />
         <property name="severity" value="error" />
-        <property name="classpath" value="${classpath}" />
     </module>
 </module>

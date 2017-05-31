@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'http://spoon.gforge.inria.fr/repositories/releases' }
         maven { url 'https://plugins.gradle.org/m2/' }
     }
 
@@ -31,7 +30,6 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url 'http://spoon.gforge.inria.fr/repositories/releases' }
 }
 
 dependencies {
@@ -56,7 +54,6 @@ ext {
 test {
     exclude 'me/loki2302/app/finalizing/**'
     systemProperty 'snippetsDir', snippetsDir
-    systemProperty 'classpath', configurations.runtime.join(',')
     systemProperty 'java.awt.headless', 'false' // only needed for AWT screenshots
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
@@ -67,7 +64,6 @@ task finalTest(type: Test) {
     useJUnit()
     include 'me/loki2302/app/finalizing/**'
     systemProperty 'snippetsDir', snippetsDir
-    systemProperty 'classpath', configurations.runtime.join(',')
     testLogging.showStandardStreams = true
     outputs.dir snippetsDir
     dependsOn test
@@ -95,9 +91,6 @@ asciidoctor {
 
 checkstyle {
     sourceSets = [project.sourceSets.main]
-    configProperties = [
-            'classpath': configurations.runtime.join(',')
-    ]
 }
 
 tasks.withType(Checkstyle) {

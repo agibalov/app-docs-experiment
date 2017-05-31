@@ -1,16 +1,18 @@
 package me.loki2302.testing;
 
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaMethod;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
-import spoon.Launcher;
-import spoon.SpoonAPI;
-import spoon.reflect.declaration.CtClass;
-import spoon.reflect.declaration.CtMethod;
+
+import java.io.File;
+import java.util.Collections;
 
 public class TestComment extends TestWatcher {
     private final String codeRoot;
 
-    private SpoonAPI spoonAPI;
+    private JavaProjectBuilder javaProjectBuilder;
     private String className;
     private String methodName;
 
@@ -20,19 +22,17 @@ public class TestComment extends TestWatcher {
 
     @Override
     protected void starting(Description description) {
-        spoonAPI = new Launcher();
-        spoonAPI.addInputResource(codeRoot);
-        spoonAPI.getEnvironment().setCommentEnabled(true);
-        spoonAPI.buildModel();
+        javaProjectBuilder = new JavaProjectBuilder();
+        javaProjectBuilder.addSourceTree(new File(codeRoot));
 
         className = description.getClassName();
         methodName = description.getMethodName();
     }
 
     public String getComment() {
-        CtClass<?> testClass = spoonAPI.getFactory().Class().get(className);
-        CtMethod<?> testMethod = testClass.getMethod(methodName);
-        String testComment = testMethod.getDocComment();
+        JavaClass testClass = javaProjectBuilder.getClassByName(className);
+        JavaMethod testMethod = testClass.getMethodBySignature(methodName, Collections.emptyList());
+        String testComment = testMethod.getComment();
         return testComment;
     }
 }

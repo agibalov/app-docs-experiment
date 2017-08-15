@@ -1,9 +1,11 @@
 buildscript {
     repositories {
-        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
-        classpath 'com.moowork.gradle:gradle-node-plugin:0.13'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.2.0'
     }
 }
 
@@ -20,6 +22,7 @@ repositories {
 node {
     version = '6.6.0'
     npmVersion = '3.10.3'
+    yarnVersion = '0.27.5'
     download = true
 
     workDir = file("${project.projectDir}/nodejs")
@@ -44,6 +47,6 @@ jar {
     dependsOn 'webpack'
 }
 
-task webpack(type: NpmTask, dependsOn: 'npmInstall') {
+task webpack(type: NpmTask, dependsOn: 'yarn_install') {
     args = ['run-script', 'gradle_build']
 }
